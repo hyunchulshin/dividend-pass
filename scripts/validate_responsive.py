@@ -279,13 +279,6 @@ def validate_responsive():
 
     # 5-1. npm run build 빌드 무결성
     try:
-        next_dir = os.path.join(BASE_DIR, '.next')
-        if os.path.exists(next_dir):
-            import shutil
-            import time
-            shutil.rmtree(next_dir, ignore_errors=True)
-            time.sleep(0.5)
-
         proc = subprocess.run(
             ['npm', 'run', 'build'],
             cwd=BASE_DIR,
