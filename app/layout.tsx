@@ -40,6 +40,11 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    other: {
+      'naver-site-verification': 'ab316e4138cc8603ff5eeea240b8ce69dd031ed9',
+    },
+  },
   other: {
     'google-adsense-account': 'ca-pub-7329867453845073',
   },
@@ -60,6 +65,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className="overflow-x-hidden max-w-full">
       <head>
+        <meta
+          name="naver-site-verification"
+          content="ab316e4138cc8603ff5eeea240b8ce69dd031ed9"
+        />
         <meta name="google-adsense-account" content="ca-pub-7329867453845073" />
         <script
           async
