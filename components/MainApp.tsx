@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { DividendStock, PortfolioItem } from '@/types/stock';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import StockExplorer from '@/components/StockExplorer';
 import EtfModal from '@/components/EtfModal';
 import FireCalculator from '@/components/FireCalculator';
@@ -206,17 +207,8 @@ export default function MainApp({ initialStocks }: MainAppProps) {
         }}
       />
 
-      {/* 푸터 (데스크탑 와이드 정렬) */}
-      <footer className="mt-12 border-t border-slate-200/80 bg-white px-4 sm:px-6 lg:px-8 py-8 text-center text-xs text-slate-400 space-y-2">
-        <div className="max-w-7xl mx-auto space-y-2">
-          <p className="font-bold text-slate-600 text-sm">배당패스 (Dividend Pass)</p>
-          <p className="text-xs leading-relaxed max-w-2xl mx-auto">
-            본 서비스에서 제공하는 배당수익률 및 지표는 과거 12개월(TTM) 실측치 기반이며, 미래 수익을 보장하지 않습니다.
-            투자 결과에 대한 책임은 본인에게 있습니다.
-          </p>
-          <p className="text-[11px] text-slate-400">© 2026 Dividend Pass. All rights reserved.</p>
-        </div>
-      </footer>
+      {/* 글로벌 푸터 */}
+      <Footer />
     </div>
   );
 }

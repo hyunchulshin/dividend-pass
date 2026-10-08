@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { TrendingUp, ShieldCheck, Sparkles } from 'lucide-react';
 import InfoTooltip from '@/components/InfoTooltip';
 
@@ -7,13 +8,13 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
         {/* 로고 & 타이틀 */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0 group-hover:bg-blue-700 transition-colors">
             <TrendingUp size={20} className="stroke-[2.5]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-extrabold tracking-tight text-slate-900 leading-none">
+              <h1 className="text-xl font-extrabold tracking-tight text-slate-900 leading-none group-hover:text-blue-600 transition-colors">
                 배당패스
               </h1>
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60 leading-none">
@@ -24,7 +25,7 @@ export default function Header() {
               국내 250개 + 미국 250개 검증 고배당주 & ETF 포트폴리오
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* 우측 뱃지 & 안내 시스템 */}
         <div className="flex items-center gap-2 sm:gap-3">
