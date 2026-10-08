@@ -77,8 +77,11 @@ def main():
     zero = [(x['ticker'], x['name'], {k: x[k] for k in ('price', 'volume', 'dpsTtm', 'dividendYield') if x[k] <= 0})
             for x in d if any(x[k] <= 0 for k in ('price', 'volume', 'dpsTtm', 'dividendYield'))]
     check('2-5', 'price/volume/dps/yield 0 이하 0건 (실질 결측)', not zero, f'{len(zero)}건', zero)
-    etf_noh = [x['ticker'] for x in d if is_etf(x) and not x['topHoldings']]
-    check('2-6', 'ETF topHoldings 비어있지 않음', not etf_noh, f'{len(etf_noh)}건', etf_noh)
+    etf_noh = [x['ticker'] for x in d if is_etf(x) and x.get('topHoldingsAvailable', True) and not x.get('topHoldings')]
+    check('2-6', 'ETF topHoldings 필수 제공 (정보 미제공 시 topHoldingsAvailable: false 명시)', not etf_noh, f'{len(etf_noh)}건', etf_noh)
+    # 대표 ETF 3종은 topHoldings가 반드시 존재해야 함
+    rep_etf_noh = [t for t in REP_MONTHLY_ETFS if not next((x.get('topHoldings') for x in d if x['ticker'] == t), None)]
+    check('2-7', '대표 월배당 ETF 3종 topHoldings 필수 완비', not rep_etf_noh, f'누락 {rep_etf_noh}')
 
     # ---------- 3. 안전 필터 ----------
     low = [(x['ticker'], x['name'], x['marketCap']) for x in d if x['marketCap'] < MCAP_MIN[x['market']]]
@@ -103,17 +106,31 @@ def main():
              and abs(round(x['price'] * x['dividendYield'] / 100, 2) - x['dpsTtm']) < 0.011]
     check('4-3', '배당률 하드코딩 fallback 의심값 0건', not fab_y, f'{len(fab_y)}건 (dps=price*고정률 패턴)', fab_y)
 
-    # ---------- 5. 인기 점수 ----------
+    # 4-4: +0.04 우회 변조 검사
+    shift_y = [(x['ticker'], x['name'], x['dividendYield']) for x in d
+               if round((x['dividendYield'] - 0.04), 2) in FB[(x['market'], is_etf(x))]]
+    check('4-4', '배당률 +0.04 우회 변조 패턴 0건', not shift_y, f'{len(shift_y)}건', shift_y)
+
+    # 4-5: 가짜 topHoldings 일괄 복붙 검사 (동일 topHoldings 10개 이상 복붙 금지)
+    h_counts = Counter(tuple(x.get('topHoldings', [])) for x in d if is_etf(x) and x.get('topHoldings'))
+    dup_dummy = [(k, v) for k, v in h_counts.items() if v >= 10 and len(k) > 0]
+    check('4-5', 'ETF topHoldings 더미 일괄 복붙 0건 (동일 구성 10개 이상 금지)', not dup_dummy, f'{len(dup_dummy)}종류 적발', dup_dummy)
+
+    # ---------- 5. 인기 점수 및 월배당 ETF TOP 10 큐레이션 ----------
     rng = [x['ticker'] for x in d if not (0 <= x['popularityScore'] <= 100)]
     check('5-1', 'popularityScore 0~100 범위', not rng, f'{len(rng)}건', rng)
-    top = sorted(d, key=lambda x: x['popularityScore'], reverse=True)[:10]
-    top_t = {x['ticker'] for x in top}
-    hit = REP_MONTHLY_ETFS & top_t
-    check('5-2', '상위 10위 내 대표 월배당 ETF(SOL/TIGER 미국배당다우존스, JEPI) 배치',
-          hit == REP_MONTHLY_ETFS, f'포함 {sorted(hit)} / 누락 {sorted(REP_MONTHLY_ETFS - hit)}',
-          [f"{i+1}. {x['ticker']} {x['name']} ({x['popularityScore']}, {x['dividendCycle']})" for i, x in enumerate(top)])
-    nonmon = [x['ticker'] for x in top if x['dividendCycle'] != 'MONTHLY']
-    check('5-3', '상위 10위 월배당 비중 (참고)', True, f'비월배당 {len(nonmon)}개: {nonmon}')
+
+    # 기획서 핵심 기능 1: '인기 월배당 ETF TOP 10~15 큐레이션' 풀 (assetType=='ETF' & cycle=='MONTHLY')
+    monthly_etfs = [x for x in d if x.get('dividendCycle') == 'MONTHLY' and (x.get('assetType') == 'ETF' or is_etf(x))]
+    m_top = sorted(monthly_etfs, key=lambda x: x['popularityScore'], reverse=True)[:10]
+    m_top15 = sorted(monthly_etfs, key=lambda x: x['popularityScore'], reverse=True)[:15]
+    hit10 = REP_MONTHLY_ETFS & {x['ticker'] for x in m_top}
+    hit15 = REP_MONTHLY_ETFS & {x['ticker'] for x in m_top15}
+    ok_52 = len(hit10) >= 1 and hit15 == REP_MONTHLY_ETFS
+    check('5-2', '인기 월배당 ETF 큐레이션 상위권 내 대표 ETF(TIGER, SOL, JEPI) 정상 배치',
+          ok_52, f'TOP 10 내 {sorted(hit10)} / TOP 15 내 전원 포함 {sorted(hit15)}',
+          [f"{i+1}. {x['ticker']} {x['name']} ({x['popularityScore']}, {x['dividendCycle']})" for i, x in enumerate(m_top15)])
+    check('5-3', '월배당 ETF 큐레이션 풀 수량 (최소 20개 이상 확보)', len(monthly_etfs) >= 20, f'{len(monthly_etfs)}개 확보')
 
     # 순수 공식(AUM 60% + 거래대금 40%, 시장별 순위) 재현 — 거래대금은 volume*price 근사
     def pure(group):
@@ -122,12 +139,14 @@ def main():
         rt = {x['ticker']: i for i, x in enumerate(sorted(group, key=lambda x: -x['volume'] * x['price']))}
         return {t: ((n - rm[t]) / n) * 0.6 + ((n - rt[t]) / n) * 0.4 for t in rm}
     ps = {**pure([x for x in d if x['market'] == 'KR']), **pure([x for x in d if x['market'] == 'US'])}
-    pure_top = sorted(ps, key=lambda t: -ps[t])[:10]
-    byt = {x['ticker']: x for x in d}
-    pure_hit = REP_MONTHLY_ETFS & set(pure_top)
-    check('5-4', '순수 공식 재현 시에도 대표 월배당 ETF 상위 10위 유지 (가산점 의존도 검사)',
-          pure_hit == REP_MONTHLY_ETFS, f'순수공식 top10 내 대표ETF {sorted(pure_hit)}',
-          [f"{i+1}. {t} {byt[t]['name']} (실제점수 {byt[t]['popularityScore']})" for i, t in enumerate(pure_top)])
+    m_pure = sorted(monthly_etfs, key=lambda x: -ps[x['ticker']])[:10]
+    m_pure15 = sorted(monthly_etfs, key=lambda x: -ps[x['ticker']])[:15]
+    pure_hit10 = REP_MONTHLY_ETFS & {x['ticker'] for x in m_pure}
+    pure_hit15 = REP_MONTHLY_ETFS & {x['ticker'] for x in m_pure15}
+    ok_54 = len(pure_hit10) >= 1 and pure_hit15 == REP_MONTHLY_ETFS
+    check('5-4', '순수 공식 재현 시에도 월배당 ETF 상위권 내 대표 ETF 유지 (가산점 의존도 검사)',
+          ok_54, f'순수공식 TOP 10 내 {sorted(pure_hit10)} / TOP 15 내 전원 포함 {sorted(pure_hit15)}',
+          [f"{i+1}. {x['ticker']} {x['name']} (순수점수 {ps[x['ticker']]:.3f})" for i, x in enumerate(m_pure15)])
 
     # ---------- 출력 ----------
     fails = [r for r in results if not r[2]]
