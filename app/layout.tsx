@@ -41,6 +41,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   verification: {
+    google: 'mXJRQUrNsyIWU9wFg_GKqfaaAK1arXoB5I1zDe9XNW8',
     other: {
       'naver-site-verification': 'ab316e4138cc8603ff5eeea240b8ce69dd031ed9',
     },
@@ -65,6 +66,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className="overflow-x-hidden max-w-full">
       <head>
+        <meta
+          name="google-site-verification"
+          content="mXJRQUrNsyIWU9wFg_GKqfaaAK1arXoB5I1zDe9XNW8"
+        />
         <meta
           name="naver-site-verification"
           content="ab316e4138cc8603ff5eeea240b8ce69dd031ed9"
