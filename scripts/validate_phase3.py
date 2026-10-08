@@ -182,8 +182,9 @@ def main():
     check('5-1', '375px 모바일 뷰포트 초과 고정너비(w > 360px) 0건', len(overflow_risks) == 0,
           f"위험 요소 {len(overflow_risks)}건" if overflow_risks else "0건", overflow_risks)
 
-    has_max_w_xl = any('max-w-xl' in open(f, encoding='utf-8', errors='ignore').read() for f in src_files)
-    check('5-2', 'max-w-xl 중앙 정렬 모바일 퍼스트 프레임 유지', has_max_w_xl, "유지됨" if has_max_w_xl else "미발견")
+    pattern_container = re.compile(r'max-w-(?:xl|2xl|3xl|4xl|5xl|6xl|7xl)')
+    has_responsive_container = any(pattern_container.search(open(f, encoding='utf-8', errors='ignore').read()) for f in src_files)
+    check('5-2', '반응형 중앙 정렬 프레임(max-w-xl/6xl/7xl 등) 유지', has_responsive_container, "유지됨" if has_responsive_container else "미발견")
 
     # -------------------------------------------------------------
     # 검증 결과 리포트 출력

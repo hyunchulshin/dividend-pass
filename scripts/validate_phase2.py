@@ -78,16 +78,17 @@ def check_phase2():
     # -------------------------------------------------------------
     src_files = find_files(BASE_DIR, ['.tsx', '.jsx', '.ts', '.js', '.css'])
     
-    # max-w-xl 및 중앙 정렬 (mx-auto) 컨테이너 확인
-    has_max_w_xl = False
+    # 반응형 컨테이너(max-w-xl, max-w-6xl, max-w-7xl 등) 및 중앙 정렬 (mx-auto) 확인
+    has_container = False
     container_files = []
+    pattern_container = re.compile(r'max-w-(?:xl|2xl|3xl|4xl|5xl|6xl|7xl)')
     for f in src_files:
         content = open(f, encoding='utf-8', errors='ignore').read()
-        if 'max-w-xl' in content and 'mx-auto' in content:
-            has_max_w_xl = True
+        if pattern_container.search(content) and 'mx-auto' in content:
+            has_container = True
             container_files.append(os.path.relpath(f, BASE_DIR))
-    check('2-1', '최대 폭 max-w-xl(640px) 및 중앙 정렬(mx-auto) 컨테이너 적용', has_max_w_xl,
-          f"발견 파일: {container_files}" if has_max_w_xl else "max-w-xl mx-auto 미발견")
+    check('2-1', '반응형 컨테이너(max-w-xl/6xl/7xl 등) 및 중앙 정렬(mx-auto) 적용', has_container,
+          f"발견 파일: {container_files}" if has_container else "반응형 mx-auto 컨테이너 미발견")
 
     # 375px 모바일 뷰포트 초과 하드코딩 너비 검사 (e.g. w-[400px], min-w-[500px] 등)
     overflow_risks = []

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { DividendStock, PortfolioItem, SimulationResult } from '@/types/stock';
-import { Flame, AlertTriangle, Calculator, Sparkles, RefreshCw, Trash2, Plus, Info, CheckCircle2, DollarSign } from 'lucide-react';
+import { Flame, AlertTriangle, Calculator, Sparkles, RefreshCw, Trash2, Plus, Info, CheckCircle2, DollarSign, Wallet } from 'lucide-react';
 import InfoTooltip from '@/components/InfoTooltip';
 
 const USD_KRW_EXCHANGE_RATE = 1350; // 기획서 고정 환율 1,350원
@@ -71,7 +71,7 @@ export default function FireCalculator({
       };
     }
 
-    // 비중 정규화 (합계가 100이 아닐 경우 비례 배분)
+    // 비중 정규화
     const totalWeight = portfolio.reduce((sum, item) => sum + (item.weight || 0), 0) || 100;
 
     let totalRequiredCapital = 0;
@@ -89,8 +89,7 @@ export default function FireCalculator({
       const dpsGrossWon = isKr ? stock.dpsTtm : stock.dpsTtm * USD_KRW_EXCHANGE_RATE;
       const dpsNetWon = dpsGrossWon * (1 - taxRate);
 
-      // 필요 최소 주식 수: 주 단위 절상 (ceil)
-      // dpsNetWon이 0 이하인 비정상 예외 방지
+      // 주 단위 절상(ceil)
       const shares = dpsNetWon > 0 ? Math.ceil(targetItemAnnualNet / dpsNetWon) : 0;
       const requiredCapital = shares * priceWon;
 
@@ -112,7 +111,7 @@ export default function FireCalculator({
     });
 
     const actualMonthlyNet = actualAnnualNet / 12;
-    // 금융소득종합과세 기준: 연간 세전 배당/이자소득 2,000만 원 초과
+    // 금융소득종합과세 기준: 연간 세전 배당소득 2,000만 원 초과
     const isComprehensiveTaxTarget = totalAnnualGross > 20_000_000;
 
     return {
@@ -128,254 +127,264 @@ export default function FireCalculator({
   }, [portfolio, targetMonthly]);
 
   return (
-    <div className="space-y-5">
-      {/* 1. 상단 입력부 카드 */}
-      <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-              <Calculator size={18} />
-            </div>
-            <div>
-              <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-none">
-                파이어(FIRE) 배당 역산기
-              </h3>
-              <p className="text-[11px] text-slate-400 mt-1 leading-none">
-                목표 월 배당금 달성에 필요한 주식 수와 자본을 역산합니다
-              </p>
-            </div>
-          </div>
-          <InfoTooltip type="fire" />
-        </div>
-
-        {/* 목표 금액 슬라이더 & 숫자 입력 */}
-        <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-100 space-y-3">
-          <div className="flex items-baseline justify-between">
-            <span className="text-xs font-bold text-slate-600">목표 월 실수령 배당금</span>
-            <div className="text-right">
-              <span className="text-2xl font-black text-blue-600 tracking-tight">
-                {(targetMonthly / 10_000).toLocaleString()}
-              </span>
-              <span className="text-sm font-bold text-slate-800 ml-1">만 원</span>
-              <span className="text-[11px] text-slate-400 block font-normal">
-                (연 {((targetMonthly * 12) / 10_000).toLocaleString()}만 원)
-              </span>
-            </div>
-          </div>
-
-          <input
-            type="range"
-            min={300_000}
-            max={5_000_000}
-            step={100_000}
-            value={targetMonthly}
-            onChange={(e) => setTargetMonthly(Number(e.target.value))}
-            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-          />
-
-          {/* 빠른 증액 버튼 */}
-          <div className="grid grid-cols-4 gap-1.5 pt-1">
-            {[100_000, 500_000, 1_000_000, 3_000_000].map((addVal) => (
-              <button
-                key={addVal}
-                type="button"
-                onClick={() => handleAddAmount(addVal)}
-                className="py-1.5 px-2 text-[11px] font-semibold bg-white border border-slate-200/80 rounded-xl text-slate-700 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 active:scale-95 transition-all text-center"
-              >
-                +{(addVal / 10_000).toLocaleString()}만
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 종합과세 경고 배너 (연 2,000만 원 초과 시 필수 노출) */}
-        {simulation.isComprehensiveTaxTarget && (
-          <div className="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-2.5 animate-in fade-in duration-200">
-            <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
-            <div className="text-xs leading-relaxed">
-              <div className="font-bold text-amber-900 flex items-center gap-1.5">
-                <span>⚠️ 금융소득종합과세 대상 안내</span>
-                <InfoTooltip type="tax" iconSize={13} />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* ======================================================== */}
+      {/* [좌측 5열 - 고정 입력 및 요약 대시보드] */}
+      {/* ======================================================== */}
+      <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-5">
+        {/* 목표 금액 슬라이더 카드 */}
+        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <Calculator size={19} />
               </div>
-              <p className="text-amber-800 mt-0.5 text-[11px]">
-                연간 세전 배당금 합계가{' '}
-                <strong className="font-extrabold underline">
-                  {Math.round(simulation.totalAnnualGross).toLocaleString()}원
-                </strong>
-                으로 2,000만 원을 초과합니다. 2,000만 원 초과분은 근로·사업 등 타 소득과 합산되어 누진세율(6~45%)이 적용될 수 있습니다.
-              </p>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-none">
+                  파이어 역산 설정
+                </h3>
+                <p className="text-xs text-slate-400 mt-1 leading-none">
+                  목표 월 배당금 입력
+                </p>
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* 핵심 시뮬레이션 요약 카드 */}
-        <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-4.5 space-y-3 shadow-md">
-          <div className="flex items-center justify-between text-xs text-slate-300">
-            <span>필요 총 투자 자본 (원화 환산)</span>
-            <span className="text-[11px] bg-white/10 px-2 py-0.5 rounded text-blue-200">
-              환율 1,350원 기준
-            </span>
+            <InfoTooltip type="fire" iconSize={16} />
           </div>
 
-          <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            {portfolio.length > 0 ? (
-              <>
-                {(simulation.totalRequiredCapital / 100_000_000).toFixed(2)}
-                <span className="text-lg font-bold text-slate-300 ml-1.5">억 원</span>
-                <span className="text-xs text-slate-400 block font-normal mt-0.5">
-                  (약 {Math.round(simulation.totalRequiredCapital).toLocaleString()}원)
+          <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-100 space-y-3">
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs font-bold text-slate-600">목표 월 실수령액</span>
+              <div className="text-right">
+                <span className="text-3xl font-black text-blue-600 tracking-tight">
+                  {(targetMonthly / 10_000).toLocaleString()}
                 </span>
-              </>
-            ) : (
-              <span className="text-sm text-slate-400 font-normal">
-                종목을 담아 시뮬레이션을 시작하세요
-              </span>
-            )}
-          </div>
-
-          <div className="pt-2.5 border-t border-white/10 grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <span className="text-slate-400 text-[11px]">예상 실제 세후 월 수령액</span>
-              <div className="font-bold text-emerald-400 text-sm mt-0.5">
-                {portfolio.length > 0
-                  ? `${Math.round(simulation.actualMonthlyNet).toLocaleString()}원`
-                  : '-'}
+                <span className="text-sm font-bold text-slate-800 ml-1">만 원</span>
+                <span className="text-xs text-slate-400 block font-normal mt-0.5">
+                  (연간 {((targetMonthly * 12) / 10_000).toLocaleString()}만 원)
+                </span>
               </div>
             </div>
-            <div>
-              <span className="text-slate-400 text-[11px]">목표 대비 달성률</span>
-              <div className="font-bold text-blue-300 text-sm mt-0.5">
-                {portfolio.length > 0
-                  ? `${((simulation.actualMonthlyNet / simulation.targetMonthly) * 100).toFixed(1)}%`
-                  : '-'}
+
+            <input
+              type="range"
+              min={300_000}
+              max={5_000_000}
+              step={100_000}
+              value={targetMonthly}
+              onChange={(e) => setTargetMonthly(Number(e.target.value))}
+              className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+
+            {/* 빠른 증액 버튼 */}
+            <div className="grid grid-cols-4 gap-1.5 pt-1">
+              {[100_000, 500_000, 1_000_000, 3_000_000].map((addVal) => (
+                <button
+                  key={addVal}
+                  type="button"
+                  onClick={() => handleAddAmount(addVal)}
+                  className="py-1.5 px-2 text-xs font-semibold bg-white border border-slate-200/80 rounded-xl text-slate-700 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 active:scale-95 transition-all text-center"
+                >
+                  +{(addVal / 10_000).toLocaleString()}만
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 종합과세 경고 배너 */}
+          {simulation.isComprehensiveTaxTarget && (
+            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-2.5 animate-in fade-in duration-200">
+              <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
+              <div className="text-xs leading-relaxed">
+                <div className="font-bold text-amber-900 flex items-center gap-1.5">
+                  <span>⚠️ 금융소득종합과세 대상 안내</span>
+                  <InfoTooltip type="tax" iconSize={13} />
+                </div>
+                <p className="text-amber-800 mt-1 text-[11px]">
+                  연간 세전 배당금이 <strong className="font-extrabold underline">{Math.round(simulation.totalAnnualGross).toLocaleString()}원</strong>으로 2,000만 원을 초과합니다. 2,000만 원 초과분은 근로·사업 등 타 소득과 합산되어 누진세율이 적용됩니다.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* 핵심 요약 그라디언트 카드 */}
+          <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-5 space-y-3.5 shadow-md">
+            <div className="flex items-center justify-between text-xs text-slate-300">
+              <span className="font-medium">필요 총 투자 자본 (원화 환산)</span>
+              <span className="text-[11px] bg-white/10 px-2.5 py-0.5 rounded text-blue-200 font-mono">
+                환율 1,350원
+              </span>
+            </div>
+
+            <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              {portfolio.length > 0 ? (
+                <>
+                  {(simulation.totalRequiredCapital / 100_000_000).toFixed(2)}
+                  <span className="text-xl font-bold text-slate-300 ml-1.5">억 원</span>
+                  <span className="text-xs text-slate-400 block font-normal mt-1">
+                    (약 {Math.round(simulation.totalRequiredCapital).toLocaleString()}원)
+                  </span>
+                </>
+              ) : (
+                <span className="text-base text-slate-400 font-normal">
+                  종목을 담아 시뮬레이션을 시작하세요
+                </span>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-white/15 grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <span className="text-slate-400 text-[11px]">예상 실제 세후 월 수령액</span>
+                <div className="font-extrabold text-emerald-400 text-base mt-0.5">
+                  {portfolio.length > 0
+                    ? `${Math.round(simulation.actualMonthlyNet).toLocaleString()}원`
+                    : '-'}
+                </div>
+              </div>
+              <div>
+                <span className="text-slate-400 text-[11px]">목표 대비 달성률</span>
+                <div className="font-extrabold text-blue-300 text-base mt-0.5">
+                  {portfolio.length > 0
+                    ? `${((simulation.actualMonthlyNet / simulation.targetMonthly) * 100).toFixed(1)}%`
+                    : '-'}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. 포트폴리오 바구니 관리 카드 */}
-      <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">
-              담은 종목 포트폴리오 ({portfolio.length}개)
-            </h4>
+      {/* ======================================================== */}
+      {/* [우측 7열 - 담은 포트폴리오 목록 & 종목별 상세 결과] */}
+      {/* ======================================================== */}
+      <div className="lg:col-span-7 space-y-5">
+        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div>
+              <h4 className="text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <span>담은 포트폴리오 종목</span>
+                <span className="text-xs font-black bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                  {portfolio.length}개
+                </span>
+              </h4>
+              <p className="text-xs text-slate-400 mt-0.5">
+                종목별 필요 주식 수 및 원금 배분 내역
+              </p>
+            </div>
+
+            {portfolio.length > 0 && (
+              <button
+                type="button"
+                onClick={handleEqualWeights}
+                className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200/60 hover:bg-blue-100 transition-colors"
+              >
+                균등 비중 재배분
+              </button>
+            )}
           </div>
 
-          {portfolio.length > 0 && (
-            <button
-              type="button"
-              onClick={handleEqualWeights}
-              className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200/60 hover:bg-blue-100 transition-colors"
-            >
-              균등 비중 재배분
-            </button>
+          {portfolio.length === 0 ? (
+            /* 빈 상태 */
+            <div className="py-16 px-6 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200 space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto shadow-xs">
+                <Sparkles size={24} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-800">
+                  아직 담은 배당 종목이 없습니다
+                </p>
+                <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                  [3대 큐레이션 탐색]에서 원하는 종목을 담거나, 검증된 대표 포트폴리오로 바로 시작해보세요.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={loadDefaultPortfolio}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-500/20 hover:bg-blue-700 active:scale-95 transition-all"
+              >
+                <Sparkles size={15} />
+                <span>대표 4대 배당 포트폴리오 즉시 담기</span>
+              </button>
+            </div>
+          ) : (
+            /* 종목별 역산 상세 리스트 */
+            <div className="space-y-3.5">
+              {simulation.itemResults.map((res) => {
+                const { stock, shares, requiredCapital, annualNetDpsWon, taxRate } = res;
+                const isKr = stock.market === 'KR';
+
+                return (
+                  <div
+                    key={stock.ticker}
+                    className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 hover:border-blue-300 transition-all space-y-3"
+                  >
+                    {/* 상단: 티커, 종목명, 제거 버튼 */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div
+                        className="cursor-pointer group flex-1"
+                        onClick={() => onSelectStock(stock)}
+                      >
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span
+                            className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                              isKr
+                                ? 'bg-red-50 text-red-600 border border-red-200/60'
+                                : 'bg-blue-50 text-blue-600 border border-blue-200/60'
+                            }`}
+                          >
+                            {stock.market}
+                          </span>
+                          <span className="font-mono text-xs font-bold text-slate-700 group-hover:text-blue-600 transition-colors">
+                            {stock.ticker}
+                          </span>
+                          <span className="text-[10px] text-slate-400">
+                            (세율 {(taxRate * 100).toFixed(1)}%)
+                          </span>
+                        </div>
+                        <h5 className="text-sm font-bold text-slate-900 mt-1 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                          {stock.name}
+                        </h5>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => onRemoveFromPortfolio(stock.ticker)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg transition-colors"
+                        title="포트폴리오에서 제거"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+
+                    {/* 그리드: 필요 주식 수 & 필요 투자 원금 */}
+                    <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-slate-200/60 text-xs">
+                      <div className="bg-white rounded-xl p-2.5 border border-slate-100">
+                        <span className="text-[11px] text-slate-400 font-medium">필요 매수 주식 수</span>
+                        <div className="font-black text-blue-600 text-base mt-0.5">
+                          {shares.toLocaleString()}주
+                        </div>
+                      </div>
+
+                      <div className="bg-white rounded-xl p-2.5 border border-slate-100">
+                        <span className="text-[11px] text-slate-400 font-medium">필요 투자 원금</span>
+                        <div className="font-black text-slate-800 text-base mt-0.5 truncate">
+                          {(requiredCapital / 10_000).toLocaleString(undefined, { maximumFractionDigits: 0 })}만 원
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 세후 월 배당 수령액 */}
+                    <div className="flex items-center justify-between text-xs text-slate-500 pt-0.5">
+                      <span>예상 세후 실수령:</span>
+                      <span className="font-bold text-emerald-600">
+                        월 {Math.round(annualNetDpsWon / 12).toLocaleString()}원 (연 {Math.round(annualNetDpsWon).toLocaleString()}원)
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
-
-        {portfolio.length === 0 ? (
-          /* 빈 상태 (추천 로드 버튼 제공) */
-          <div className="py-8 px-4 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto">
-              <Sparkles size={20} />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-700">
-                아직 담은 배당 종목이 없습니다
-              </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                상단 큐레이션 탐색에서 원하는 종목을 담거나, 대표 포트폴리오로 시작해보세요.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={loadDefaultPortfolio}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 hover:bg-blue-700 active:scale-95 transition-all"
-            >
-              <Sparkles size={13} />
-              <span>대표 4대 배당 포트폴리오 즉시 담기</span>
-            </button>
-          </div>
-        ) : (
-          /* 담긴 종목별 역산 상세 리스트 */
-          <div className="space-y-3">
-            {simulation.itemResults.map((res) => {
-              const { stock, shares, requiredCapital, annualNetDpsWon, taxRate } = res;
-              const isKr = stock.market === 'KR';
-
-              return (
-                <div
-                  key={stock.ticker}
-                  className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 hover:border-blue-300 transition-colors space-y-2.5"
-                >
-                  {/* 상단 티커, 이름, 제거 버튼 */}
-                  <div className="flex items-start justify-between gap-2">
-                    <div
-                      className="cursor-pointer group flex-1"
-                      onClick={() => onSelectStock(stock)}
-                    >
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span
-                          className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                            isKr
-                              ? 'bg-red-50 text-red-600 border border-red-200/60'
-                              : 'bg-blue-50 text-blue-600 border border-blue-200/60'
-                          }`}
-                        >
-                          {stock.market}
-                        </span>
-                        <span className="font-mono text-xs font-bold text-slate-700 group-hover:text-blue-600 transition-colors">
-                          {stock.ticker}
-                        </span>
-                        <span className="text-[10px] text-slate-400">
-                          (세율 {(taxRate * 100).toFixed(1)}%)
-                        </span>
-                      </div>
-                      <h5 className="text-xs font-bold text-slate-900 mt-0.5 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                        {stock.name}
-                      </h5>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => onRemoveFromPortfolio(stock.ticker)}
-                      className="p-1 text-slate-400 hover:text-rose-600 rounded-lg transition-colors"
-                      aria-label="포트폴리오에서 제거"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-
-                  {/* 역산 결과: 필요 주식 수 & 필요 금액 */}
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 text-xs">
-                    <div className="bg-white rounded-xl p-2 border border-slate-100">
-                      <span className="text-[10px] text-slate-400 font-medium">필요 매수 수량</span>
-                      <div className="font-extrabold text-blue-600 text-sm mt-0.5">
-                        {shares.toLocaleString()}주
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-2 border border-slate-100">
-                      <span className="text-[10px] text-slate-400 font-medium">필요 투자 원금</span>
-                      <div className="font-extrabold text-slate-800 text-sm mt-0.5 truncate">
-                        {(requiredCapital / 10_000).toLocaleString(undefined, { maximumFractionDigits: 0 })}만 원
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 세후 월 배당 수령액 */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                    <span>예상 세후 실수령:</span>
-                    <span className="font-bold text-emerald-600">
-                      월 {Math.round(annualNetDpsWon / 12).toLocaleString()}원 (연 {Math.round(annualNetDpsWon).toLocaleString()}원)
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
     </div>
   );
