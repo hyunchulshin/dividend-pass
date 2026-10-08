@@ -58,6 +58,13 @@ def check_phase2():
     # npm run build 실행
     print("  -> npm run build 빌드 무결성 검증 중...")
     try:
+        tsbuildinfo_path = os.path.join(BASE_DIR, 'tsconfig.tsbuildinfo')
+        if os.path.exists(tsbuildinfo_path):
+            try:
+                os.remove(tsbuildinfo_path)
+            except Exception:
+                pass
+
         build_proc = subprocess.run(
             ['npm', 'run', 'build'],
             cwd=BASE_DIR,

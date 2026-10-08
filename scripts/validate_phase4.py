@@ -161,11 +161,12 @@ def main():
     # -------------------------------------------------------------
     print("  [4/4] 최종 프로덕션 빌드 (npm run build) 검증 중...")
     try:
-        # 이전 빌드 캐시 충돌 방지 클린 빌드
-        next_dir = os.path.join(BASE_DIR, '.next')
-        if os.path.exists(next_dir):
-            import shutil
-            shutil.rmtree(next_dir, ignore_errors=True)
+        tsbuildinfo_path = os.path.join(BASE_DIR, 'tsconfig.tsbuildinfo')
+        if os.path.exists(tsbuildinfo_path):
+            try:
+                os.remove(tsbuildinfo_path)
+            except Exception:
+                pass
 
         proc = subprocess.run(
             ['npm', 'run', 'build'],

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import Link from 'next/link';
 import { DividendStock } from '@/types/stock';
-import { X, Flame, ShieldCheck, AlertTriangle, Plus, Check, Trash2, PieChart, Info, DollarSign, Calendar } from 'lucide-react';
+import { X, Flame, ShieldCheck, AlertTriangle, Plus, Check, Trash2, PieChart, Info, DollarSign, Calendar, ExternalLink } from 'lucide-react';
 import InfoTooltip from '@/components/InfoTooltip';
 
 interface EtfModalProps {
@@ -247,27 +248,36 @@ export default function EtfModal({
 
         {/* 모달 하단 고정 액션 버튼 */}
         <div className="sticky bottom-0 bg-white/95 backdrop-blur-md p-4 border-t border-slate-100">
-          <button
-            type="button"
-            onClick={() => onTogglePortfolio(stock)}
-            className={`w-full py-3.5 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md ${
-              isInPortfolio
-                ? 'bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100'
-                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/20 active:scale-[0.99]'
-            }`}
-          >
-            {isInPortfolio ? (
-              <>
-                <Trash2 size={16} />
-                <span>시뮬레이터에서 제거하기</span>
-              </>
-            ) : (
-              <>
-                <Plus size={17} className="stroke-[2.5]" />
-                <span>[+ 파이어 시뮬레이터에 담기]</span>
-              </>
-            )}
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => onTogglePortfolio(stock)}
+              className={`w-full py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md ${
+                isInPortfolio
+                  ? 'bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100'
+                  : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/20 active:scale-[0.99]'
+              }`}
+            >
+              {isInPortfolio ? (
+                <>
+                  <Trash2 size={16} />
+                  <span>시뮬레이터에서 제거하기</span>
+                </>
+              ) : (
+                <>
+                  <Plus size={17} className="stroke-[2.5]" />
+                  <span>[+ 파이어 시뮬레이터에 담기]</span>
+                </>
+              )}
+            </button>
+            <Link
+              href={`/stock/${stock.ticker}`}
+              className="w-full py-1 text-center text-xs font-semibold text-slate-500 hover:text-blue-600 flex items-center justify-center gap-1 transition-colors"
+            >
+              <span>{stock.name} 고유 상세 분석 페이지 보기</span>
+              <ExternalLink size={12} />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

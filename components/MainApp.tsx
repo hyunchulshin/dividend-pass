@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DividendStock, PortfolioItem } from '@/types/stock';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -32,6 +32,27 @@ export default function MainApp({ initialStocks }: MainAppProps) {
   // 상세 모달 상태
   const [selectedStock, setSelectedStock] = useState<DividendStock | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // URL 쿼리 파라미터(?select=TICKER) 처리
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const selectTicker = params.get('select');
+    if (selectTicker) {
+      const target = initialStocks.find((s) => s.ticker.toLowerCase() === selectTicker.toLowerCase());
+      if (target) {
+        setPortfolio((prev) => {
+          if (prev.some((p) => p.stock.ticker === target.ticker)) return prev;
+          const newLen = prev.length + 1;
+          const equalWeight = 100 / newLen;
+          return [...prev.map((p) => ({ ...p, weight: equalWeight })), { stock: target, weight: equalWeight }];
+        });
+        if (window.location.hash.includes('fire-simulator')) {
+          setNavTab('calculator');
+        }
+      }
+    }
+  }, [initialStocks]);
 
   // 포트폴리오 티커 Set
   const portfolioTickers = new Set(portfolio.map((p) => p.stock.ticker));

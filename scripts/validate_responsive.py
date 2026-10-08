@@ -279,6 +279,13 @@ def validate_responsive():
 
     # 5-1. npm run build 빌드 무결성
     try:
+        tsbuildinfo_path = os.path.join(BASE_DIR, 'tsconfig.tsbuildinfo')
+        if os.path.exists(tsbuildinfo_path):
+            try:
+                os.remove(tsbuildinfo_path)
+            except Exception:
+                pass
+
         proc = subprocess.run(
             ['npm', 'run', 'build'],
             cwd=BASE_DIR,

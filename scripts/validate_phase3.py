@@ -97,6 +97,13 @@ def main():
     # 1. 빌드 및 에러 무결성 (npm run build)
     print("  [1/5] 빌드 무결성 (npm run build) 검증 중...")
     try:
+        tsbuildinfo_path = os.path.join(BASE_DIR, 'tsconfig.tsbuildinfo')
+        if os.path.exists(tsbuildinfo_path):
+            try:
+                os.remove(tsbuildinfo_path)
+            except Exception:
+                pass
+
         proc = subprocess.run(
             ['npm', 'run', 'build'],
             cwd=BASE_DIR,

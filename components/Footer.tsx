@@ -5,13 +5,20 @@ export default function Footer() {
   return (
     <footer className="mt-auto border-t border-slate-200/80 bg-white py-8 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
       <div className="max-w-7xl mx-auto space-y-3.5">
-        {/* 네비게이션 링크 4종 */}
+        {/* 네비게이션 링크 5종 */}
         <nav aria-label="하단 메뉴" className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-slate-600">
           <Link
             href="/about"
             className="hover:text-blue-600 transition-colors"
           >
             서비스 소개
+          </Link>
+          <span className="text-slate-300">·</span>
+          <Link
+            href="/guide"
+            className="hover:text-blue-600 transition-colors font-semibold text-blue-600"
+          >
+            배당 가이드
           </Link>
           <span className="text-slate-300">·</span>
           <Link

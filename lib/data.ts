@@ -34,3 +34,8 @@ export async function getDividendStocks(): Promise<DividendStock[]> {
 
   return [];
 }
+
+export async function getStockByTicker(ticker: string): Promise<DividendStock | undefined> {
+  const stocks = await getDividendStocks();
+  return stocks.find((s) => s.ticker.toLowerCase() === ticker.toLowerCase());
+}

@@ -277,6 +277,13 @@ def validate_adsense():
     build_detail = ""
     static_count = 0
     try:
+        tsbuildinfo_path = os.path.join(BASE_DIR, 'tsconfig.tsbuildinfo')
+        if os.path.exists(tsbuildinfo_path):
+            try:
+                os.remove(tsbuildinfo_path)
+            except Exception:
+                pass
+
         proc = subprocess.run(
             ['npm', 'run', 'build'],
             cwd=BASE_DIR,
