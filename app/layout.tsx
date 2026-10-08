@@ -40,6 +40,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  other: {
+    'google-adsense-account': 'ca-pub-7329867453845073',
+  },
 };
 
 export const viewport: Viewport = {
@@ -56,6 +59,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="overflow-x-hidden max-w-full">
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-7329867453845073" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7329867453845073"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-screen bg-white text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden max-w-full w-full">
         <div className="min-h-screen flex flex-col bg-white overflow-x-hidden w-full max-w-full">
           {children}
