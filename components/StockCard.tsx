@@ -1,14 +1,23 @@
 import React from 'react';
 import { DividendStock } from '@/types/stock';
-import { Flame, AlertTriangle } from 'lucide-react';
+import { Flame, AlertTriangle, Plus, Check } from 'lucide-react';
 import InfoTooltip from '@/components/InfoTooltip';
 
 interface StockCardProps {
   stock: DividendStock;
   rank?: number;
+  isInPortfolio?: boolean;
+  onTogglePortfolio?: (stock: DividendStock) => void;
+  onSelectStock?: (stock: DividendStock) => void;
 }
 
-export default function StockCard({ stock, rank }: StockCardProps) {
+export default function StockCard({
+  stock,
+  rank,
+  isInPortfolio,
+  onTogglePortfolio,
+  onSelectStock,
+}: StockCardProps) {
   const isMonthly = stock.dividendCycle === 'MONTHLY';
   const isKr = stock.market === 'KR';
 
@@ -23,8 +32,11 @@ export default function StockCard({ stock, rank }: StockCardProps) {
     : `$${stock.dpsTtm.toFixed(2)}`;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm hover:shadow-md transition-all duration-200">
-      {/* 상단: 랭크/시장/티커 + 배당주기 뱃지 */}
+    <div
+      onClick={() => onSelectStock && onSelectStock(stock)}
+      className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200 cursor-pointer relative group"
+    >
+      {/* 상단: 랭크/시장/티커 + 배당주기 뱃지 + 담기 버튼 */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {rank !== undefined && (
@@ -49,7 +61,7 @@ export default function StockCard({ stock, rank }: StockCardProps) {
           </span>
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           {stock.isHighRisk && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
               <AlertTriangle size={11} className="stroke-[2.5]" />
@@ -65,19 +77,42 @@ export default function StockCard({ stock, rank }: StockCardProps) {
           >
             {isMonthly ? '🗓️ 월배당' : stock.dividendCycle}
           </span>
+
+          {/* 인라인 담기 버튼 */}
+          {onTogglePortfolio && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTogglePortfolio(stock);
+              }}
+              className={`p-1 rounded-lg border text-[11px] font-semibold flex items-center gap-0.5 transition-all ${
+                isInPortfolio
+                  ? 'bg-blue-600 text-white border-blue-600 hover:bg-rose-600 hover:border-rose-600'
+                  : 'bg-slate-50 text-slate-600 border-slate-200/80 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200'
+              }`}
+              title={isInPortfolio ? '포트폴리오에서 제거' : '포트폴리오에 담기'}
+            >
+              {isInPortfolio ? (
+                <Check size={12} className="stroke-[3]" />
+              ) : (
+                <Plus size={12} className="stroke-[3]" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 
       {/* 중단: 종목명 */}
       <div className="mt-2 mb-3">
-        <h3 className="text-sm font-bold text-slate-900 leading-snug line-clamp-1">
+        <h3 className="text-sm font-bold text-slate-900 leading-snug line-clamp-1 group-hover:text-blue-600 transition-colors">
           {stock.name}
         </h3>
       </div>
 
       {/* 하단 그리드: 배당수익률, 주가, DPS, 인기점수 */}
       <div className="grid grid-cols-3 gap-2 pt-2.5 border-t border-slate-100 text-center">
-        {/* 배당수익률 (가장 강조) */}
+        {/* 배당수익률 */}
         <div className="bg-slate-50/70 rounded-xl p-2">
           <div className="text-[10px] text-slate-500 font-medium flex items-center justify-center gap-0.5">
             배당률
