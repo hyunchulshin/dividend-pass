@@ -87,9 +87,9 @@ export default function StockExplorer({
   return (
     <div className="space-y-6">
       {/* 1. 상단 3대 큐레이션 탭 & 툴바 (데스크탑 와이드 정렬) */}
-      <div className="space-y-4">
-        {/* 탭 버튼 그룹 */}
-        <div className="bg-slate-200/80 p-1.5 rounded-2xl flex flex-col sm:flex-row gap-1 shadow-xs">
+      <div className="space-y-3.5">
+        {/* 탭 버튼 그룹 (청약패스식 밝은 bg-slate-100 & 섬세한 보더) */}
+        <div className="bg-slate-100 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row gap-1 border border-slate-200/60 shadow-xs">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -97,9 +97,9 @@ export default function StockExplorer({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-3 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-center flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-2.5 sm:py-3 px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-extrabold transition-all text-center flex items-center justify-center gap-1.5 ${
                   isActive
-                    ? 'bg-white text-slate-900 shadow-sm'
+                    ? 'bg-white text-slate-900 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
@@ -109,12 +109,12 @@ export default function StockExplorer({
           })}
         </div>
 
-        {/* 2. 시장 필터 & 검색창 툴바 (데스크탑 2열 와이드 배치) */}
-        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        {/* 2. 시장 필터 & 검색창 툴바 (데스크탑 2열 와이드 배치 & 모바일 flex-wrap 패딩 완벽 안착) */}
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 sm:gap-3 max-w-full overflow-hidden">
           {/* 좌측: 시장 필터 토글 */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-bold text-slate-500 hidden sm:inline">시장:</span>
-            <div className="flex bg-slate-100 p-1 rounded-xl shrink-0">
+            <div className="flex bg-slate-100 p-1 rounded-xl shrink-0 border border-slate-200/60">
               {(['ALL', 'KR', 'US'] as MarketFilter[]).map((m) => (
                 <button
                   key={m}
@@ -132,23 +132,23 @@ export default function StockExplorer({
             </div>
           </div>
 
-          {/* 우측: 검색 인풋 및 수량 표시 */}
-          <div className="flex items-center gap-3 flex-1 md:max-w-md">
-            <div className="relative flex-1">
+          {/* 우측: 검색 인풋 및 수량 표시 (모바일 375px 내 min-w-0 안전 수용) */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 md:max-w-md w-full min-w-0 max-w-full">
+            <div className="relative flex-1 min-w-0">
               <Search
-                size={16}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                size={15}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
               />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="티커(005930, SCHD...) 또는 종목명 검색"
-                className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-200/80 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                placeholder="티커 또는 종목명 검색"
+                className="w-full min-w-0 pl-8 pr-2.5 py-2 bg-slate-50 border border-slate-200/80 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all box-border"
               />
             </div>
-            <div className="text-xs font-bold text-slate-500 shrink-0 whitespace-nowrap bg-slate-50 px-2.5 py-2 rounded-xl border border-slate-200/60">
-              <span className="text-blue-600 font-black">{filteredStocks.length}</span>개
+            <div className="text-xs font-bold text-slate-500 shrink-0 whitespace-nowrap bg-slate-50 px-2 py-2 rounded-xl border border-slate-200/60 leading-none flex items-center">
+              <span className="text-blue-600 font-black mr-0.5">{filteredStocks.length}</span>개
             </div>
           </div>
         </div>

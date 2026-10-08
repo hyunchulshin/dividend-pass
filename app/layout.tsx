@@ -19,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
-        <div className="min-h-screen flex flex-col bg-slate-50">
+    <html lang="ko" className="overflow-x-hidden max-w-full">
+      <body className="min-h-screen bg-white text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden max-w-full w-full">
+        <div className="min-h-screen flex flex-col bg-white overflow-x-hidden w-full max-w-full">
           {children}
         </div>
       </body>

@@ -136,10 +136,10 @@ export default function InfoTooltip({
       {isOpen && (
         <div
           role="tooltip"
-          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 max-w-[calc(100vw-32px)] p-3.5 bg-slate-900/95 text-white rounded-xl shadow-xl backdrop-blur-sm border border-slate-700/60 text-xs leading-relaxed transition-all animate-in fade-in zoom-in-95 duration-150"
+          className="absolute z-50 bottom-full right-0 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto mb-2 w-72 max-w-[calc(100vw-40px)] p-3.5 bg-slate-900/95 text-white rounded-xl shadow-xl backdrop-blur-sm border border-slate-700/60 text-xs leading-relaxed transition-all animate-in fade-in zoom-in-95 duration-150"
         >
           {/* 말꼬리 화살표 */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-solid border-t-slate-900/95 border-t-[6px] border-x-transparent border-x-[6px] border-b-0" />
+          <div className="absolute top-full right-3 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto -mt-[1px] border-solid border-t-slate-900/95 border-t-[6px] border-x-transparent border-x-[6px] border-b-0" />
 
           <div className="flex items-start justify-between gap-2 pb-1.5 border-b border-slate-700/70 mb-1.5">
             <span className="font-semibold text-white tracking-tight flex items-center gap-1.5">

@@ -52,7 +52,10 @@ def run_script(script_name):
             text=True,
             timeout=180
         )
-        return (proc.returncode == 0), f"종료코드: {proc.returncode}"
+        if proc.returncode != 0:
+            err_msg = (proc.stderr.strip() or proc.stdout.strip())[-300:]
+            return False, f"종료코드: {proc.returncode}\n{err_msg}"
+        return True, f"종료코드: {proc.returncode}"
     except Exception as e:
         return False, f"실행 예외: {e}"
 

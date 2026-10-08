@@ -206,8 +206,8 @@ export default function FireCalculator({
             </div>
           )}
 
-          {/* 핵심 요약 그라디언트 카드 */}
-          <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-5 space-y-3.5 shadow-md">
+          {/* 핵심 요약 카드 (청약패스식 딥 슬레이트 단색) */}
+          <div className="bg-slate-900 text-white rounded-2xl p-5 space-y-3.5 shadow-sm border border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-300">
               <span className="font-medium">필요 총 투자 자본 (원화 환산)</span>
               <span className="text-[11px] bg-white/10 px-2.5 py-0.5 rounded text-blue-200 font-mono">

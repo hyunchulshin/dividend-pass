@@ -34,13 +34,13 @@ export default function StockCard({
   return (
     <div
       onClick={() => onSelectStock && onSelectStock(stock)}
-      className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200 cursor-pointer relative group"
+      className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-150 cursor-pointer relative group"
     >
       {/* 상단: 랭크/시장/티커 + 배당주기 뱃지 + 담기 버튼 */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {rank !== undefined && (
-            <span className="text-xs font-bold text-slate-400 w-5">
+            <span className="text-xs font-black text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60 leading-none">
               #{rank}
             </span>
           )}
@@ -53,7 +53,7 @@ export default function StockCard({
           >
             {stock.market}
           </span>
-          <span className="text-xs font-mono font-bold text-slate-700">
+          <span className="text-xs font-mono font-bold text-slate-600">
             {stock.ticker}
           </span>
           <span className="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
@@ -86,7 +86,7 @@ export default function StockCard({
                 e.stopPropagation();
                 onTogglePortfolio(stock);
               }}
-              className={`p-1 rounded-lg border text-[11px] font-semibold flex items-center gap-0.5 transition-all ${
+              className={`p-2 min-w-[32px] min-h-[32px] rounded-lg border text-[11px] font-semibold flex items-center justify-center gap-0.5 transition-all ${
                 isInPortfolio
                   ? 'bg-blue-600 text-white border-blue-600 hover:bg-rose-600 hover:border-rose-600'
                   : 'bg-slate-50 text-slate-600 border-slate-200/80 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200'
@@ -103,28 +103,28 @@ export default function StockCard({
         </div>
       </div>
 
-      {/* 중단: 종목명 */}
-      <div className="mt-2 mb-3">
-        <h3 className="text-sm font-bold text-slate-900 leading-snug line-clamp-1 group-hover:text-blue-600 transition-colors">
+      {/* 중단: 종목명 (가독성 강화) */}
+      <div className="mt-2.5 mb-3">
+        <h3 className="text-sm sm:text-base font-extrabold text-slate-900 leading-snug line-clamp-1 group-hover:text-blue-600 transition-colors">
           {stock.name}
         </h3>
       </div>
 
-      {/* 하단 그리드: 배당수익률, 주가, DPS, 인기점수 */}
+      {/* 하단 그리드: 배당수익률, 주가, DPS, 인기점수 (깔끔한 회색 인셋 박스 정렬) */}
       <div className="grid grid-cols-3 gap-2 pt-2.5 border-t border-slate-100 text-center">
         {/* 배당수익률 */}
-        <div className="bg-slate-50/70 rounded-xl p-2">
+        <div className="bg-slate-50/80 rounded-xl p-2 border border-slate-100/80 flex flex-col justify-center">
           <div className="text-[10px] text-slate-500 font-medium flex items-center justify-center gap-0.5">
             배당률
             <InfoTooltip type="ttm" iconSize={12} />
           </div>
-          <div className="text-base font-extrabold text-blue-600 tracking-tight mt-0.5">
+          <div className="text-base sm:text-lg font-black text-blue-600 tracking-tight mt-0.5">
             {stock.dividendYield.toFixed(2)}%
           </div>
         </div>
 
         {/* 현재가 / 연간 DPS */}
-        <div className="bg-slate-50/70 rounded-xl p-2">
+        <div className="bg-slate-50/80 rounded-xl p-2 border border-slate-100/80 flex flex-col justify-center">
           <div className="text-[10px] text-slate-500 font-medium">현재가</div>
           <div className="text-xs font-bold text-slate-800 mt-1 truncate">
             {formattedPrice}
@@ -135,7 +135,7 @@ export default function StockCard({
         </div>
 
         {/* 인기 점수 */}
-        <div className="bg-slate-50/70 rounded-xl p-2">
+        <div className="bg-slate-50/80 rounded-xl p-2 border border-slate-100/80 flex flex-col justify-center">
           <div className="text-[10px] text-slate-500 font-medium flex items-center justify-center gap-0.5">
             인기점수
             <InfoTooltip type="popularity" iconSize={12} />
