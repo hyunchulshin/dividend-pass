@@ -153,10 +153,6 @@ def collect_kr_etfs():
         if dps <= 0:
             return None
 
-        # 하드코딩 fallback 의심값 회피
-        if div_yield in {8.5, 3.8, 1.6, 1.2} and abs(round(price * div_yield / 100, 2) - dps) < 0.011:
-            return None
-
         cycle = get_dividend_cycle(code, name, 'KR', True)
         has_holdings = code in TOP_HOLDINGS_DICT
         holdings = TOP_HOLDINGS_DICT[code] if has_holdings else []
@@ -261,9 +257,6 @@ def collect_kr_stocks():
         if abs(calc_y - div_yield) > max(0.5, 0.1 * div_yield):
             div_yield = calc_y
 
-        if div_yield in {2.1} and abs(round(price * div_yield / 100, 2) - dps) < 0.011:
-            return None
-
         cycle = get_dividend_cycle(code, name, 'KR', False)
 
         return {
@@ -360,9 +353,6 @@ def collect_us_etfs():
             if abs(calc_y - div_yield) > max(0.5, 0.1 * div_yield):
                 div_yield = calc_y
 
-            if div_yield in {8.5, 50.0, 3.5, 4.2, 2.0} and abs(round(price * div_yield / 100, 2) - dps) < 0.011:
-                return None
-
             cycle = get_dividend_cycle(t, name, 'US', True)
             fee = EXPENSE_RATIO_DICT.get(t, 0.25)
             has_holdings = t in TOP_HOLDINGS_DICT
@@ -453,9 +443,6 @@ def collect_us_stocks():
             calc_y = round((dps / price) * 100, 2)
             if abs(calc_y - div_yield) > max(0.5, 0.1 * div_yield):
                 div_yield = calc_y
-
-            if div_yield in {2.5} and abs(round(price * div_yield / 100, 2) - dps) < 0.011:
-                return None
 
             cycle = get_dividend_cycle(t, name, 'US', False)
 

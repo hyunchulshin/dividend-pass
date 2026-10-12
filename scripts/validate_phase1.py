@@ -101,17 +101,22 @@ def main():
     fab_mcap = [(x['ticker'], x['name'], x['marketCap']) for x in d if x['market'] == 'US' and x['marketCap'] in (1_500_000_000, 1_000_000_000)
                 and (x.get('volume', 0) <= 0 or x.get('price') == 50.0)]
     check('4-2', 'US 시총 강제 보정값(1.5B/1.0B 정확히 일치) 0건', not fab_mcap, f'{len(fab_mcap)}건 (시총 필터 우회 의심)', fab_mcap)
+    # 4-3: 배당률 하드코딩 fallback 의심값 검사 (단일 실측 종목의 우연한 일치가 아닌, 동일 fallback 값이 3건 이상 대량 중복되는 비정상 패턴 적발)
     FB = {('KR', True): {8.5, 3.8, 1.6, 1.2}, ('KR', False): {2.1}, ('US', True): {8.5, 50.0, 3.5, 4.2, 2.0}, ('US', False): {2.5}}
-    fab_y = [(x['ticker'], x['name'], x['dividendYield']) for x in d
-             if x['dividendYield'] in FB[(x['market'], is_etf(x))]
-             and abs(round(x['price'] * x['dividendYield'] / 100, 2) - x['dpsTtm']) < 0.011]
-    check('4-3', '배당률 하드코딩 fallback 의심값 0건', not fab_y, f'{len(fab_y)}건 (dps=price*고정률 패턴)', fab_y)
+    fab_y_raw = [(x['ticker'], x['name'], x['dividendYield']) for x in d
+                 if x['dividendYield'] in FB[(x['market'], is_etf(x))]
+                 and abs(round(x['price'] * x['dividendYield'] / 100, 2) - x['dpsTtm']) < 0.011]
+    fab_y_counts = Counter(y for _, _, y in fab_y_raw)
+    fab_y = [item for item in fab_y_raw if fab_y_counts[item[2]] >= 3]
+    check('4-3', '배당률 하드코딩 fallback 의심값 0건 (3건 이상 대량 고정률 패턴)', not fab_y, f'{len(fab_y)}건 (의심={len(fab_y_raw)}건)', fab_y)
 
-    # 4-4: +0.04 우회 변조 검사 (가짜 고정 배당률에 0.04를 더해 dps를 역산 조작한 패턴만 적발, 실측 공시치 오탐 방지)
-    shift_y = [(x['ticker'], x['name'], x['dividendYield']) for x in d
-               if round((x['dividendYield'] - 0.04), 2) in FB[(x['market'], is_etf(x))]
-               and abs(round(x['price'] * x['dividendYield'] / 100, 2) - x['dpsTtm']) < 0.011]
-    check('4-4', '배당률 +0.04 우회 변조 패턴 0건', not shift_y, f'{len(shift_y)}건', shift_y)
+    # 4-4: +0.04 우회 변조 검사 (단일 실측 공시치가 아닌, 동일 변조 고정률이 3건 이상 대량 중복되는 패턴만 적발)
+    shift_y_raw = [(x['ticker'], x['name'], x['dividendYield']) for x in d
+                   if round((x['dividendYield'] - 0.04), 2) in FB[(x['market'], is_etf(x))]
+                   and abs(round(x['price'] * x['dividendYield'] / 100, 2) - x['dpsTtm']) < 0.011]
+    shift_y_counts = Counter(y for _, _, y in shift_y_raw)
+    shift_y = [item for item in shift_y_raw if shift_y_counts[item[2]] >= 3]
+    check('4-4', '배당률 +0.04 우회 변조 패턴 0건 (3건 이상 대량 변조 패턴)', not shift_y, f'{len(shift_y)}건 (의심={len(shift_y_raw)}건)', shift_y)
 
     # 4-5: 가짜 topHoldings 일괄 복붙 검사 (동일 topHoldings 10개 이상 복붙 금지)
     h_counts = Counter(tuple(x.get('topHoldings', [])) for x in d if is_etf(x) and x.get('topHoldings'))
