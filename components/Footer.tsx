@@ -51,7 +51,7 @@ export default function Footer() {
 
         {/* 저작권 표기 */}
         <p className="text-[11px] text-slate-400 font-mono">
-          © 2026 Dividend Pass. All rights reserved.
+          © 2026 Dividend Pass · RainShine Team. All rights reserved.
         </p>
       </div>
     </footer>

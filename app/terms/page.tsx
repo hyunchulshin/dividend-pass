@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { AlertTriangle, FileCheck, ShieldAlert, Scale, HelpCircle } from 'lucide-react';
@@ -110,11 +111,23 @@ export default function TermsPage() {
           </div>
         </section>
 
-        {/* 4. 약관의 변경 및 관할 법원 */}
+        {/* 4. 준거법 및 관할 법원 */}
         <section className="space-y-2 text-xs text-slate-500 border-t border-slate-200 pt-6">
           <h3 className="font-bold text-slate-700">4. 준거법 및 관할 법원</h3>
           <p>
             본 약관은 대한민국 법령에 따라 규율되고 해석되며, 서비스 이용과 관련하여 발생한 분쟁에 대해서는 민사소송법상의 관할 법원을 제1심 관할 법원으로 합니다.
+          </p>
+        </section>
+
+        {/* 5. 운영팀 및 약관 관련 문의 */}
+        <section className="space-y-2 text-xs text-slate-500 border-t border-slate-200 pt-6">
+          <h3 className="font-bold text-slate-700">5. 운영팀 정보 및 약관 관련 문의</h3>
+          <p>
+            본 약관 및 서비스 이용과 관련된 문의 사항은 운영팀(RainShine Team,{' '}
+            <a href="mailto:rainshine.email@gmail.com" className="text-blue-600 underline">
+              rainshine.email@gmail.com
+            </a>
+            ) 또는 <Link href="/contact" className="text-blue-600 underline font-medium">문의하기</Link> 페이지를 통해 접수해 주시기 바랍니다.
           </p>
         </section>
       </main>

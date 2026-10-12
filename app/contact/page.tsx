@@ -37,16 +37,19 @@ export default function ContactPage() {
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <Mail size={20} />
             </div>
-            <h2 className="text-base font-bold text-slate-900">공식 이메일 문의</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-bold text-slate-900">공식 이메일 문의</h2>
+              <span className="text-xs px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-semibold">RainShine Team</span>
+            </div>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              가장 빠르고 정확하게 운영진에게 전달되는 공식 창구입니다. 주말 및 공휴일을 제외하고 보통 24시간 이내에 회신드립니다.
+              가장 빠르고 정확하게 운영진(RainShine Team)에게 전달되는 공식 창구입니다. 주말 및 공휴일을 제외하고 보통 24시간 이내에 회신드립니다.
             </p>
             <div className="pt-2">
               <a
-                href="mailto:contact@dividendpass.com"
+                href="mailto:rainshine.email@gmail.com"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-blue-600 font-bold text-xs sm:text-sm hover:border-blue-400 hover:shadow-xs transition-all"
               >
-                <span>contact@dividendpass.com</span>
+                <span>rainshine.email@gmail.com</span>
                 <Send size={14} />
               </a>
             </div>

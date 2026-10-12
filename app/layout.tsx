@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     '파이어족',
     '배당소득세',
   ],
-  authors: [{ name: 'Dividend Pass Team' }],
+  authors: [{ name: 'RainShine Team' }],
   openGraph: {
     title: '배당패스 - 검증된 고배당주 & ETF 큐레이션',
     description:

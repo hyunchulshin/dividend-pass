@@ -74,7 +74,7 @@ export default function AboutPage() {
           </h2>
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3 leading-relaxed text-sm text-slate-600">
             <p>
-              배당패스는 글로벌 공신력을 갖춘 <strong>Yahoo Finance 실측 데이터 파이프라인</strong>을 구축하여 운영됩니다:
+              배당패스는 공신력을 갖춘 <strong>네이버 금융 및 Yahoo Finance 실측 데이터 파이프라인</strong>을 구축하여 운영됩니다:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-xs sm:text-sm pl-1">
               <li><strong>국내 250개 종목:</strong> 삼성전자, 맥쿼리인프라, 금융지주 및 TIGER/KODEX/SOL/ACE 대표 배당 ETF</li>
@@ -128,8 +128,28 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* 4. 운영팀 안내 */}
+        <section className="p-5 rounded-2xl bg-slate-50 border border-slate-200/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm text-slate-600">
+          <div>
+            <span className="font-bold text-slate-800">운영 및 관리: </span>
+            <span className="font-semibold text-slate-900">RainShine Team</span>
+            <span className="text-slate-400 mx-2">|</span>
+            <span>공식 문의: </span>
+            <a href="mailto:rainshine.email@gmail.com" className="text-blue-600 font-semibold underline">
+              rainshine.email@gmail.com
+            </a>
+          </div>
+          <Link
+            href="/contact"
+            className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 shrink-0"
+          >
+            <span>문의 페이지</span>
+            <ArrowRight size={13} />
+          </Link>
+        </section>
+
         {/* 하단 홈으로 이동 CTA */}
-        <section className="pt-4 text-center">
+        <section className="pt-2 text-center">
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 active:scale-95 transition-all shadow-xs"
