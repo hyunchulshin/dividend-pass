@@ -46,7 +46,7 @@ export default function ContactPage() {
             </p>
             <div className="pt-2">
               <a
-                href="mailto:rainshine.email@gmail.com"
+                href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EB%AC%B8%EC%9D%98"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-blue-600 font-bold text-xs sm:text-sm hover:border-blue-400 hover:shadow-xs transition-all"
               >
                 <span>rainshine.email@gmail.com</span>
@@ -63,9 +63,18 @@ export default function ContactPage() {
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
               분배금 변동, 신규 상장된 유망 월배당 ETF 편입 요청, 데이터 오기 제보는 이메일 제목에 [데이터 제보] 말머리를 달아주시면 우선 처리됩니다.
             </p>
-            <div className="pt-2 text-xs text-slate-400 flex items-center gap-1.5">
-              <CheckCircle2 size={14} className="text-emerald-500" />
-              <span>실시간 크롤링 및 파이프라인 검증 반영</span>
+            <div className="pt-2 flex items-center justify-between gap-2 flex-wrap">
+              <a
+                href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EC%A0%9C%EB%B3%B4%5D%20"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
+              >
+                <Send size={12} />
+                <span>[데이터 제보] 메일 보내기</span>
+              </a>
+              <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                <CheckCircle2 size={13} className="text-emerald-500" />
+                <span>우선 검토 및 반영</span>
+              </div>
             </div>
           </div>
         </section>

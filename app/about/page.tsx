@@ -135,7 +135,7 @@ export default function AboutPage() {
             <span className="font-semibold text-slate-900">RainShine Team</span>
             <span className="text-slate-400 mx-2">|</span>
             <span>공식 문의: </span>
-            <a href="mailto:rainshine.email@gmail.com" className="text-blue-600 font-semibold underline">
+            <a href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EB%AC%B8%EC%9D%98" className="text-blue-600 font-semibold underline">
               rainshine.email@gmail.com
             </a>
           </div>

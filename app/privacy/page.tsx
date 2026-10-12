@@ -140,7 +140,7 @@ export default function PrivacyPage() {
             <div className="pt-1 text-xs text-slate-500 space-y-1">
               <p>• 서비스명: 배당패스 (Dividend Pass)</p>
               <p>• 운영 및 개인정보 관리 책임: RainShine Team</p>
-              <p>• 공식 이메일: <a href="mailto:rainshine.email@gmail.com" className="text-blue-600 underline font-semibold">rainshine.email@gmail.com</a></p>
+              <p>• 공식 이메일: <a href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%20%EB%AC%B8%EC%9D%98" className="text-blue-600 underline font-semibold">rainshine.email@gmail.com</a></p>
             </div>
           </div>
         </section>
