@@ -9,3 +9,6 @@ export const SITE_URL =
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : 'https://dividend-pass.vercel.app');
+
+export const ADSENSE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-7329867453845073';

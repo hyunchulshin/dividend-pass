@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, ADSENSE_CLIENT_ID } from '@/lib/site';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    'google-adsense-account': 'ca-pub-7329867453845073',
+    'google-adsense-account': ADSENSE_CLIENT_ID,
   },
 };
 
@@ -75,10 +75,10 @@ export default function RootLayout({
           name="naver-site-verification"
           content="ab316e4138cc8603ff5eeea240b8ce69dd031ed9"
         />
-        <meta name="google-adsense-account" content="ca-pub-7329867453845073" />
+        <meta name="google-adsense-account" content={ADSENSE_CLIENT_ID} />
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7329867453845073"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
         />
       </head>
