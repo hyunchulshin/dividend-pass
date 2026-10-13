@@ -36,7 +36,7 @@
 | `/about` | `app/about/page.tsx` | 서비스 소개, 핵심 가치, 데이터 투명성 | **PASS** | 배당패스 기획 의도 및 산출 공식 투명 안내 |
 | `/privacy` | `app/privacy/page.tsx` | 개인정보처리방침 컴포넌트 유효성 | **PASS** | 개인정보 수집 및 처리 방침 시맨틱 구성 |
 | `/terms` | `app/terms/page.tsx` | 이용약관 및 서비스 이용 규정 | **PASS** | 약관 조항 및 법적 면책 고지 완비 |
-| `/contact` | `app/contact/page.tsx` | 고객 지원, 문의 채널 및 FAQ | **PASS** | 공식 이메일(`hcshin@kbfg.com`) 및 FAQ 구비 |
+| `/contact` | `app/contact/page.tsx` | 고객 지원, 문의 채널 및 FAQ | **PASS** | 공식 이메일(`rainshine.email@gmail.com`) 및 FAQ 구비 |
 
 ### 2.2 /privacy 구글 애드센스 정책 필수 조항 검증 (3/3 PASS)
 
