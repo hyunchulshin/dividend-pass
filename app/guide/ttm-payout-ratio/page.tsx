@@ -17,6 +17,7 @@ import {
   Layers,
   Flame,
 } from 'lucide-react';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'TTM 배당수익률과 배당성향(Payout Ratio) 제대로 읽는 법 - 배당패스',
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'TTM 배당수익률과 배당성향(Payout Ratio) 제대로 읽는 법 - 배당패스',
     description: '높은 배당수익률 뒤에 숨겨진 함정을 피하고 지속 가능한 알짜 배당주를 찾는 펀더멘털 분석 가이드.',
-    url: 'https://dividendpass.com/guide/ttm-payout-ratio',
+    url: `${SITE_URL}/guide/ttm-payout-ratio`,
     siteName: '배당패스 (Dividend Pass)',
   },
 };

@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { getDividendStocks } from '@/lib/data';
+import { SITE_URL } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://dividendpass.com';
+  const baseUrl = SITE_URL;
   const now = new Date();
 
   // 기본 정적 페이지 목록 (9개)

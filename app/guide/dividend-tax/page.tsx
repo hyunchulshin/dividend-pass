@@ -17,6 +17,7 @@ import {
   Building2,
   Lock,
 } from 'lucide-react';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: '배당소득세 15.4%와 2,000만 원 금융소득종합과세 완벽 가이드 - 배당패스',
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '배당소득세 15.4%와 2,000만 원 금융소득종합과세 완벽 가이드 - 배당패스',
     description: '배당 투자자의 최대 적인 세금과 건보료를 지키는 실전 절세 가이드! 배당패스에서 확인하세요.',
-    url: 'https://dividendpass.com/guide/dividend-tax',
+    url: `${SITE_URL}/guide/dividend-tax`,
     siteName: '배당패스 (Dividend Pass)',
   },
 };

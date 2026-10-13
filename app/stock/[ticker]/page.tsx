@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getDividendStocks, getStockByTicker } from '@/lib/data';
+import { SITE_URL } from '@/lib/site';
 import {
   Sparkles,
   TrendingUp,
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
       title,
       description,
       type: 'article',
-      url: `https://dividendpass.com/stock/${stock.ticker}`,
+      url: `${SITE_URL}/stock/${stock.ticker}`,
       siteName: '배당패스 (Dividend Pass)',
     },
     twitter: {

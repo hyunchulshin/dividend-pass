@@ -16,6 +16,7 @@ import {
   Layers,
   Coins,
 } from 'lucide-react';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: '2026 지금 가장 핫한 월배당 ETF 고르는 3가지 기준 - 배당패스',
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '2026 지금 가장 핫한 월배당 ETF 고르는 3가지 기준 - 배당패스',
     description: '월배당 ETF 투자 시 원금 갉아먹기 배당트랩을 피하고 우량 종목을 고르는 3대 핵심 기준을 완벽 분석합니다.',
-    url: 'https://dividendpass.com/guide/monthly-etf-top10',
+    url: `${SITE_URL}/guide/monthly-etf-top10`,
     siteName: '배당패스 (Dividend Pass)',
   },
 };

@@ -16,6 +16,7 @@ import {
   Clock,
   Compass,
 } from 'lucide-react';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: '배당 투자 실전 가이드 센터 - 배당패스 (Dividend Pass)',
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '배당 투자 실전 가이드 센터 - 배당패스',
     description: '실패 없는 배당 투자를 위한 3대 핵심 실전 가이드와 분석 기준을 무료로 제공합니다.',
-    url: 'https://dividendpass.com/guide',
+    url: `${SITE_URL}/guide`,
     siteName: '배당패스 (Dividend Pass)',
   },
 };

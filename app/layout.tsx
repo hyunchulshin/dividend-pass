@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://dividendpass.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: '배당패스 - 검증된 고배당주 & ETF 큐레이션',
     template: '%s | 배당패스',
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     title: '배당패스 - 검증된 고배당주 & ETF 큐레이션',
     description:
       '국내 250개 + 미국 250개 총 500개 고배당주/ETF 실측치 및 파이어 배당 역산기',
-    url: 'https://dividendpass.com',
+    url: SITE_URL,
     siteName: '배당패스',
     locale: 'ko_KR',
     type: 'website',
