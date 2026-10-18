@@ -315,21 +315,22 @@ export default async function StockDetailPage({ params }: StockPageProps) {
 
               {stock.topHoldings && stock.topHoldings.length > 0 ? (
                 <div className="space-y-3 pt-1">
-                  <h3 className="text-xs font-bold text-slate-700">상위 편입 종목 TOP {stock.topHoldings.length}</h3>
-                  <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-bold text-slate-700">상위 편입 종목 TOP {stock.topHoldings.length} (공시 비중순)</h3>
+                    <span className="text-[10px] text-slate-400">자산운용사 최신 공시 기준</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {stock.topHoldings.map((holding, idx) => (
-                      <div key={idx} className="space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-medium text-slate-700 truncate max-w-[280px] sm:max-w-none">
-                            {idx + 1}. {holding}
-                          </span>
-                        </div>
-                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-blue-500 rounded-full"
-                            style={{ width: `${Math.max(15, 80 - idx * 14)}%` }}
-                          />
-                        </div>
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/60 text-xs"
+                      >
+                        <span className="shrink-0 w-5 h-5 rounded-md bg-blue-50 text-blue-600 font-bold text-[10px] flex items-center justify-center border border-blue-100">
+                          #{idx + 1}
+                        </span>
+                        <span className="font-semibold text-slate-800 truncate">
+                          {holding}
+                        </span>
                       </div>
                     ))}
                   </div>

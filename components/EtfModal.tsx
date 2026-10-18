@@ -61,14 +61,6 @@ export default function EtfModal({
     ? `${(stock.marketCap / 100_000_000_000).toFixed(1)}천억 원`
     : `$${(stock.marketCap / 1_000_000_000).toFixed(2)}B`;
 
-  // 상위 편입비중 가상 가중치 (1위 9~12%, 순차 감쇄)
-  const holdingsWithWeights = (stock.topHoldings || []).map((name, idx) => {
-    const weights = [11.2, 8.5, 6.8, 5.4, 4.3];
-    return {
-      name,
-      weight: weights[idx] || 3.5,
-    };
-  });
 
   return (
     <div
@@ -189,30 +181,25 @@ export default function EtfModal({
                 </div>
               </div>
 
-              {/* 상위 편입종목 리스트/게이지 */}
-              {stock.topHoldingsAvailable && holdingsWithWeights.length > 0 ? (
+              {/* 상위 편입종목 리스트 (정직한 실측 순위 뱃지) */}
+              {stock.topHoldingsAvailable && stock.topHoldings && stock.topHoldings.length > 0 ? (
                 <div className="space-y-2 pt-1 border-t border-slate-200/60">
                   <div className="text-[11px] font-semibold text-slate-500 flex items-center justify-between">
-                    <span>상위 구성 종목 TOP {holdingsWithWeights.length}</span>
-                    <span>예상 비중</span>
+                    <span>상위 구성 종목 TOP {stock.topHoldings.length} (공시 비중순)</span>
+                    <span className="text-[10px] text-slate-400">자산운용사 최신 공시 기준</span>
                   </div>
-                  <div className="space-y-2">
-                    {holdingsWithWeights.map((h, i) => (
-                      <div key={i} className="space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-medium text-slate-700">
-                            {i + 1}. {h.name}
-                          </span>
-                          <span className="font-mono text-slate-500 text-[11px]">
-                            {h.weight.toFixed(1)}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-slate-200/80 h-1.5 rounded-full overflow-hidden">
-                          <div
-                            className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full"
-                            style={{ width: `${Math.min(h.weight * 7, 100)}%` }}
-                          />
-                        </div>
+                  <div className="grid grid-cols-1 gap-1.5 pt-0.5">
+                    {stock.topHoldings.map((name, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-white border border-slate-200/70 text-xs shadow-xs"
+                      >
+                        <span className="shrink-0 w-5 h-5 rounded-md bg-blue-50 text-blue-600 font-bold text-[10px] flex items-center justify-center border border-blue-100">
+                          #{i + 1}
+                        </span>
+                        <span className="font-semibold text-slate-800 truncate">
+                          {name}
+                        </span>
                       </div>
                     ))}
                   </div>

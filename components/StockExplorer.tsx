@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { DividendStock, CurationTab, MarketFilter } from '@/types/stock';
 import StockCard from '@/components/StockCard';
 import InfoTooltip from '@/components/InfoTooltip';
-import { Search, Flame, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { Search, Flame, SlidersHorizontal, Sparkles, ChevronDown } from 'lucide-react';
 
 interface StockExplorerProps {
   stocks: DividendStock[];
@@ -22,6 +22,12 @@ export default function StockExplorer({
   const [activeTab, setActiveTab] = useState<CurationTab>('popular_monthly');
   const [marketFilter, setMarketFilter] = useState<MarketFilter>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [visibleCount, setVisibleCount] = useState<number>(24);
+
+  // 탭, 시장 필터, 검색어 변경 시 노출 개수 초기화 (24개)
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [activeTab, marketFilter, searchQuery]);
 
   // 탭 목록 정의
   const TABS = [
@@ -43,7 +49,7 @@ export default function StockExplorer({
       id: 'market_cap' as CurationTab,
       label: '🏛️ 대표 우량 배당 (시총순)',
       shortLabel: '시총순 대표주',
-      description: '시가총액 규모 최상위 우량 배당주',
+      description: '배당수익률 2% 이상 시가총액 최상위 우량 배당주',
       tooltip: 'safety' as const,
     },
   ];
@@ -78,7 +84,10 @@ export default function StockExplorer({
         .filter((s) => s.dividendYield >= 6.0)
         .sort((a, b) => b.dividendYield - a.dividendYield);
     } else if (activeTab === 'market_cap') {
-      result = result.sort((a, b) => b.marketCap - a.marketCap);
+      // 배당수익률 2.0% 이상인 대형 우량 배당주만 시총순 정렬 (비배당 기술주 제외)
+      result = result
+        .filter((s) => s.dividendYield >= 2.0)
+        .sort((a, b) => b.marketCap - a.marketCap);
     }
 
     return result;
@@ -168,20 +177,39 @@ export default function StockExplorer({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {filteredStocks.map((stock, idx) => {
-            const inPortfolio = portfolioTickers.has(stock.ticker);
-            return (
-              <StockCard
-                key={stock.ticker}
-                stock={stock}
-                rank={activeTab === 'popular_monthly' ? idx + 1 : undefined}
-                isInPortfolio={inPortfolio}
-                onTogglePortfolio={onTogglePortfolio}
-                onSelectStock={onSelectStock}
-              />
-            );
-          })}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {filteredStocks.slice(0, visibleCount).map((stock, idx) => {
+              const inPortfolio = portfolioTickers.has(stock.ticker);
+              return (
+                <StockCard
+                  key={stock.ticker}
+                  stock={stock}
+                  rank={activeTab === 'popular_monthly' ? idx + 1 : undefined}
+                  isInPortfolio={inPortfolio}
+                  onTogglePortfolio={onTogglePortfolio}
+                  onSelectStock={onSelectStock}
+                />
+              );
+            })}
+          </div>
+
+          {/* 24개 단위 더보기 (Load More) 버튼 */}
+          {visibleCount < filteredStocks.length && (
+            <div className="flex justify-center pt-2">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((prev) => prev + 24)}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs hover:shadow-md text-sm font-bold text-slate-700 hover:text-blue-600 transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
+              >
+                <span>+ 24개 종목 더보기</span>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600">
+                  남은 {filteredStocks.length - visibleCount}개
+                </span>
+                <ChevronDown size={16} className="text-slate-400 group-hover:text-blue-600 transition-transform group-hover:translate-y-0.5" />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
