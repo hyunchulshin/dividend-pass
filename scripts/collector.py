@@ -26,7 +26,8 @@ session.headers.update({
 # -------------------------------------------------------------
 
 KNOWN_MONTHLY_US = {
-    'JEPI', 'JEPQ', 'O', 'MAIN', 'QYLD', 'XYLD', 'RYLD', 'BST', 'GPIQ', 'GPIX',
+    'JEPI', 'JEPQ', 'O', 'MAIN', 'STAG', 'EPR', 'LTC', 'GLAD', 'GOOD', 'PSEC', 'LAND',
+    'QYLD', 'XYLD', 'RYLD', 'BST', 'GPIQ', 'GPIX',
     'SVOL', 'TLTW', 'HYGW', 'LQDW', 'FEPI', 'AIPI', 'YMAX', 'QDTE', 'XDTE',
     'CLM', 'CRF', 'AGNC', 'DIA', 'BND', 'AGG', 'TLT', 'IEF', 'SHY',
     'HYG', 'JNK', 'LQD', 'VCIT', 'VCSH', 'BNDX', 'EMB', 'TIP', 'MUB', 'SJNK',
@@ -41,7 +42,8 @@ KNOWN_MONTHLY_KR_KEYWORDS = [
 
 KNOWN_QUARTERLY_KR_TICKERS = {
     '005930', '005935', '005380', '005385', '005387', '000270', '105560',
-    '055550', '086790', '316140', '017670', '005490', '034730', '032830'
+    '055550', '086790', '316140', '017670', '005490', '034730', '032830',
+    '030200', '032640', '012330', '018880', '088980', '097950'
 }
 
 TOP_HOLDINGS_DICT = {
@@ -146,7 +148,7 @@ def collect_kr_etfs():
         except Exception:
             return None
 
-        if div_yield <= 0:
+        if div_yield < 1.0:
             return None
 
         dps = round(price * (div_yield / 100.0), 2)
@@ -250,12 +252,15 @@ def collect_kr_stocks():
         except Exception:
             return None
 
-        if div_yield <= 0 or dps <= 0:
+        if div_yield < 1.0 or dps <= 0:
             return None
 
         calc_y = round((dps / price) * 100, 2)
         if abs(calc_y - div_yield) > max(0.5, 0.1 * div_yield):
             div_yield = calc_y
+
+        if div_yield < 1.0:
+            return None
 
         cycle = get_dividend_cycle(code, name, 'KR', False)
 
@@ -283,8 +288,9 @@ def collect_kr_stocks():
         results = [r for r in executor.map(fetch_kr_stock, candidates) if r]
 
     unique = {x['ticker']: x for x in results}
-    premier = [unique[t] for t in PRIORITY_LARGE_KR if t in unique]
-    others = [x for x in unique.values() if x['ticker'] not in PRIORITY_LARGE_KR]
+    premier = [unique[t] for t in PRIORITY_LARGE_KR if t in unique and unique[t]['dividendYield'] >= 1.0]
+    premier_tickers = {p['ticker'] for p in premier}
+    others = [x for x in unique.values() if x['ticker'] not in premier_tickers and x['dividendYield'] >= 1.0]
 
     others.sort(key=lambda x: (x['dividendYield'] >= 2.0, x['marketCap']), reverse=True)
 
@@ -346,12 +352,15 @@ def collect_us_etfs():
                     v = info.get('value', '').replace('$', '').replace(',', '').strip()
                     if v and v != 'N/A': dps = float(v)
 
-            if div_yield <= 0 or dps <= 0:
+            if div_yield < 1.0 or dps <= 0:
                 return None
 
             calc_y = round((dps / price) * 100, 2)
             if abs(calc_y - div_yield) > max(0.5, 0.1 * div_yield):
                 div_yield = calc_y
+
+            if div_yield < 1.0:
+                return None
 
             cycle = get_dividend_cycle(t, name, 'US', True)
             fee = EXPENSE_RATIO_DICT.get(t, 0.25)
@@ -437,12 +446,15 @@ def collect_us_stocks():
                     v = info.get('value', '').replace('$', '').replace(',', '').strip()
                     if v and v != 'N/A': dps = float(v)
 
-            if div_yield <= 0 or dps <= 0:
+            if div_yield < 1.0 or dps <= 0:
                 return None
 
             calc_y = round((dps / price) * 100, 2)
             if abs(calc_y - div_yield) > max(0.5, 0.1 * div_yield):
                 div_yield = calc_y
+
+            if div_yield < 1.0:
+                return None
 
             cycle = get_dividend_cycle(t, name, 'US', False)
 
@@ -471,7 +483,7 @@ def collect_us_stocks():
     priority_results = []
     with ThreadPoolExecutor(max_workers=10) as executor:
         for r in executor.map(fetch_single_us_stock, PRIORITY_US_STOCKS):
-            if r:
+            if r and r['dividendYield'] >= 1.0:
                 priority_results.append(r)
 
     exchange_candidates = []
@@ -489,10 +501,13 @@ def collect_us_stocks():
                         div_y = float(s.get('dividendYield') or 0)
                         dps = float(s.get('dividendRaw') or round(price * (div_y / 100.0), 2))
 
-                        if mcap >= 500_000_000 and price > 0 and vol > 0 and div_y > 0 and dps > 0 and name and name != t:
+                        if mcap >= 500_000_000 and price > 0 and vol > 0 and div_y >= 1.0 and dps > 0 and name and name != t:
                             calc_y = round((dps / price) * 100, 2)
                             if abs(calc_y - div_y) > max(0.5, 0.1 * div_y):
                                 div_y = calc_y
+
+                            if div_y < 1.0:
+                                continue
 
                             if div_y in {2.5} and abs(round(price * div_y / 100, 2) - dps) < 0.011:
                                 continue
@@ -521,8 +536,9 @@ def collect_us_stocks():
                 pass
 
     unique = {x['ticker']: x for x in priority_results + exchange_candidates}
-    premier = [unique[t] for t in PRIORITY_US_STOCKS if t in unique]
-    others = [x for x in unique.values() if x['ticker'] not in PRIORITY_US_STOCKS]
+    premier = [unique[t] for t in PRIORITY_US_STOCKS if t in unique and unique[t]['dividendYield'] >= 1.0]
+    premier_tickers = {p['ticker'] for p in premier}
+    others = [x for x in unique.values() if x['ticker'] not in premier_tickers and x['dividendYield'] >= 1.0]
 
     others.sort(key=lambda x: (x['dividendYield'] >= 2.0, x['marketCap']), reverse=True)
 
