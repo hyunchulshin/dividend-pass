@@ -1,11 +1,29 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { DividendStock, PortfolioItem, SimulationResult } from '@/types/stock';
-import { Flame, AlertTriangle, Calculator, Sparkles, RefreshCw, Trash2, Plus, Info, CheckCircle2, DollarSign, Wallet } from 'lucide-react';
+import {
+  Flame,
+  AlertTriangle,
+  Calculator,
+  Sparkles,
+  RefreshCw,
+  Trash2,
+  Plus,
+  Info,
+  CheckCircle2,
+  DollarSign,
+  Wallet,
+  Calendar,
+  ArrowRight,
+  ArrowUpRight,
+  BarChart2,
+  Sliders,
+} from 'lucide-react';
 import InfoTooltip from '@/components/InfoTooltip';
 
-const USD_KRW_EXCHANGE_RATE = 1350; // 기획서 고정 환율 1,350원
+const DEFAULT_EXCHANGE_RATE = 1350; // 기준 환율 1,350원
 const KR_TAX_RATE = 0.154; // 국내 배당소득세 15.4%
 const US_TAX_RATE = 0.150; // 미국 배당소득세 15.0%
 
@@ -26,6 +44,14 @@ export default function FireCalculator({
 }: FireCalculatorProps) {
   // 목표 월 배당금 (기본 100만 원)
   const [targetMonthly, setTargetMonthly] = useState<number>(1_000_000);
+  // 환율 설정 상태 (기본 1,350원)
+  const [exchangeRate, setExchangeRate] = useState<number>(DEFAULT_EXCHANGE_RATE);
+  const [isEditingExchange, setIsEditingExchange] = useState<boolean>(false);
+
+  // 포트폴리오 내 미국 종목 포함 여부
+  const hasUsStock = useMemo(() => {
+    return portfolio.some((p) => p.stock.market === 'US');
+  }, [portfolio]);
 
   // 대표 추천 포트폴리오 로드
   const loadDefaultPortfolio = () => {
@@ -85,8 +111,8 @@ export default function FireCalculator({
 
       const isKr = stock.market === 'KR';
       const taxRate = isKr ? KR_TAX_RATE : US_TAX_RATE;
-      const priceWon = isKr ? stock.price : stock.price * USD_KRW_EXCHANGE_RATE;
-      const dpsGrossWon = isKr ? stock.dpsTtm : stock.dpsTtm * USD_KRW_EXCHANGE_RATE;
+      const priceWon = isKr ? stock.price : stock.price * exchangeRate;
+      const dpsGrossWon = isKr ? stock.dpsTtm : stock.dpsTtm * exchangeRate;
       const dpsNetWon = dpsGrossWon * (1 - taxRate);
 
       // 주 단위 절상(ceil)
@@ -124,7 +150,36 @@ export default function FireCalculator({
       isComprehensiveTaxTarget,
       itemResults,
     };
-  }, [portfolio, targetMonthly]);
+  }, [portfolio, targetMonthly, exchangeRate]);
+
+  // 1월~12월 월별 예상 배당금 계산
+  const monthlyCashflow = useMemo(() => {
+    const months = Array(12).fill(0);
+
+    simulation.itemResults.forEach((res) => {
+      const netAnnual = res.annualNetDpsWon;
+      if (netAnnual <= 0) return;
+
+      const cycle = res.stock.dividendCycle;
+      if (cycle === 'MONTHLY') {
+        // 매월 고르게 분배
+        for (let i = 0; i < 12; i++) {
+          months[i] += netAnnual / 12;
+        }
+      } else if (cycle === 'QUARTERLY') {
+        // 통상 3, 6, 9, 12월 분기 지급 (0-indexed: 2, 5, 8, 11)
+        [2, 5, 8, 11].forEach((m) => {
+          months[m] += netAnnual / 4;
+        });
+      } else {
+        // 연배당: 통상 4월(0-indexed: 3) 정기 주총 결산 배당금 지급
+        months[3] += netAnnual;
+      }
+    });
+
+    const maxMonthAmount = Math.max(...months, 1);
+    return { months, maxMonthAmount };
+  }, [simulation.itemResults]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -188,30 +243,142 @@ export default function FireCalculator({
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* 종합과세 경고 배너 */}
-          {simulation.isComprehensiveTaxTarget && (
-            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-2.5 animate-in fade-in duration-200">
-              <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
-              <div className="text-xs leading-relaxed">
-                <div className="font-bold text-amber-900 flex items-center gap-1.5">
-                  <span>⚠️ 금융소득종합과세 대상 안내</span>
-                  <InfoTooltip type="tax" iconSize={13} />
-                </div>
-                <p className="text-amber-800 mt-1 text-[11px]">
-                  연간 세전 배당금이 <strong className="font-extrabold underline">{Math.round(simulation.totalAnnualGross).toLocaleString()}원</strong>으로 2,000만 원을 초과합니다. 2,000만 원 초과분은 근로·사업 등 타 소득과 합산되어 누진세율이 적용됩니다.
-                </p>
+            {/* 환율 설정 툴바 (미국 주식 포함 시 또는 필요 시 환율 변경) */}
+            <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
+              <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+                <DollarSign size={12} className="text-slate-400" />
+                적용 환율:
+              </span>
+              <div className="flex items-center gap-1">
+                {[1300, 1350, 1400].map((rate) => (
+                  <button
+                    key={rate}
+                    type="button"
+                    onClick={() => {
+                      setExchangeRate(rate);
+                      setIsEditingExchange(false);
+                    }}
+                    className={`px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all ${
+                      exchangeRate === rate && !isEditingExchange
+                        ? 'bg-blue-600 text-white shadow-xs'
+                        : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    {rate}원
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setIsEditingExchange((prev) => !prev)}
+                  className={`px-2 py-0.5 rounded-lg text-[11px] font-bold border transition-all ${
+                    isEditingExchange
+                      ? 'bg-blue-50 text-blue-600 border-blue-300'
+                      : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  직접
+                </button>
               </div>
             </div>
-          )}
+
+            {isEditingExchange && (
+              <div className="flex items-center gap-2 pt-1 animate-in fade-in duration-150">
+                <span className="text-xs text-slate-500 whitespace-nowrap">환율 직접 입력:</span>
+                <input
+                  type="number"
+                  min={1000}
+                  max={2000}
+                  step={10}
+                  value={exchangeRate}
+                  onChange={(e) => setExchangeRate(Math.max(1000, Number(e.target.value)))}
+                  className="w-24 px-2 py-1 bg-white border border-blue-300 rounded-lg text-xs font-bold text-slate-800 text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+                <span className="text-xs font-bold text-slate-600">원 / USD</span>
+              </div>
+            )}
+          </div>
+
+          {/* 금융소득종합과세 2,000만 원 한도 게이지 바 */}
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                <span>금융소득종합과세 한도 게이지</span>
+                <InfoTooltip type="tax" iconSize={13} />
+              </div>
+              <span
+                className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
+                  simulation.isComprehensiveTaxTarget
+                    ? 'bg-rose-100 text-rose-700'
+                    : 'bg-emerald-100 text-emerald-700'
+                }`}
+              >
+                {simulation.isComprehensiveTaxTarget ? '주의: 2,000만 원 초과' : '안전: 분리과세 구간'}
+              </span>
+            </div>
+
+            {/* 게이지 바 */}
+            <div className="space-y-1">
+              <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${
+                    simulation.isComprehensiveTaxTarget
+                      ? 'bg-rose-500'
+                      : simulation.totalAnnualGross >= 15_000_000
+                      ? 'bg-amber-500'
+                      : 'bg-emerald-500'
+                  }`}
+                  style={{
+                    width: `${Math.min(100, (simulation.totalAnnualGross / 20_000_000) * 100)}%`,
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                <span>연 0원</span>
+                <span>
+                  연 세전{' '}
+                  <strong className="text-slate-700 font-bold">
+                    {(simulation.totalAnnualGross / 10_000).toLocaleString(undefined, { maximumFractionDigits: 0 })}만 원
+                  </strong>{' '}
+                  / 2,000만 원 (
+                  {Math.min(999, Math.round((simulation.totalAnnualGross / 20_000_000) * 100))}%)
+                </span>
+                <span>2,000만 원</span>
+              </div>
+            </div>
+
+            {simulation.isComprehensiveTaxTarget ? (
+              <div className="p-2.5 bg-rose-50 rounded-xl border border-rose-200/70 text-[11px] text-rose-800 leading-relaxed space-y-1">
+                <p>
+                  연 세전 배당금이 2,000만 원을 초과하여 타 소득과 합산 과세됩니다. ISA 또는 연금저축 계좌를 활용해 세금을 절약하세요.
+                </p>
+                <Link
+                  href="/guide/dividend-tax"
+                  className="inline-flex items-center gap-1 font-bold text-rose-700 hover:text-rose-900 underline"
+                >
+                  <span>2,000만 원 금융소득종합과세 절세 가이드 읽기</span>
+                  <ArrowUpRight size={12} />
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+                <span>15.4%(미국 15%) 원천징수로 세금 종결</span>
+                <Link
+                  href="/guide/dividend-tax"
+                  className="text-blue-600 hover:text-blue-700 font-bold hover:underline"
+                >
+                  절세 팁 보기
+                </Link>
+              </div>
+            )}
+          </div>
 
           {/* 핵심 요약 카드 (청약패스식 딥 슬레이트 단색) */}
           <div className="bg-slate-900 text-white rounded-2xl p-5 space-y-3.5 shadow-sm border border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-300">
               <span className="font-medium">필요 총 투자 자본 (원화 환산)</span>
               <span className="text-[11px] bg-white/10 px-2.5 py-0.5 rounded text-blue-200 font-mono">
-                환율 1,350원
+                환율 {exchangeRate.toLocaleString()}원
               </span>
             </div>
 
@@ -257,6 +424,87 @@ export default function FireCalculator({
       {/* [우측 7열 - 담은 포트폴리오 목록 & 종목별 상세 결과] */}
       {/* ======================================================== */}
       <div className="lg:col-span-7 space-y-5">
+        {/* 1월~12월 월별 예상 배당금 입금 캘린더 차트 (포트폴리오가 있을 때 노출) */}
+        {portfolio.length > 0 && (
+          <div className="bg-white rounded-3xl p-5 sm:p-6 border border-blue-200/80 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                    <Calendar size={17} />
+                  </div>
+                  <h4 className="text-base font-extrabold text-slate-900 tracking-tight">
+                    1월~12월 월별 배당 입금 캘린더
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-500 pl-10">
+                  선택한 종목들의 배당 주기에 따른 매월 예상 세후 입금액 흐름
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 self-start sm:self-auto pl-10 sm:pl-0">
+                <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
+                  월평균 {(simulation.actualMonthlyNet / 10_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}만 원
+                </span>
+              </div>
+            </div>
+
+            {/* 12개 월 바 차트 컨테이너 */}
+            <div className="bg-slate-50/80 rounded-2xl p-4 sm:p-5 border border-slate-100 space-y-3">
+              <div className="grid grid-cols-12 gap-1 sm:gap-2 items-end h-32 sm:h-36 pt-4 pb-1">
+                {monthlyCashflow.months.map((amt, idx) => {
+                  const heightPercent =
+                    amt > 0 ? Math.max(12, Math.round((amt / monthlyCashflow.maxMonthAmount) * 100)) : 6;
+                  const isMax = amt > 0 && amt === monthlyCashflow.maxMonthAmount;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center justify-end h-full group relative"
+                    >
+                      {/* 툴팁 (금액 표시) */}
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-8 bg-slate-900 text-white text-[10px] font-bold py-1 px-1.5 rounded shadow-md whitespace-nowrap z-20 pointer-events-none">
+                        {Math.round(amt).toLocaleString()}원
+                      </div>
+
+                      {/* 바 차트 기둥 */}
+                      <div className="w-full max-w-[28px] h-full flex items-end">
+                        <div
+                          className={`w-full rounded-t-md transition-all duration-300 ${
+                            amt === 0
+                              ? 'bg-slate-200'
+                              : isMax
+                              ? 'bg-blue-600 group-hover:bg-blue-700 shadow-xs'
+                              : 'bg-blue-400 group-hover:bg-blue-500'
+                          }`}
+                          style={{ height: `${heightPercent}%` }}
+                        />
+                      </div>
+
+                      {/* 하단 월 라벨 */}
+                      <span
+                        className={`text-[10px] mt-2 font-mono font-bold ${
+                          isMax ? 'text-blue-700' : 'text-slate-500'
+                        }`}
+                      >
+                        {idx + 1}월
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-200/60">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-sm bg-blue-600 inline-block" />
+                  <span>진한 색: 최다 입금 월</span>
+                </span>
+                <span>막대를 누르거나 마우스를 올리면 월별 상세 금액 확인</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
             <div>
