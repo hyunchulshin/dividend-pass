@@ -8,6 +8,7 @@ import StockExplorer from '@/components/StockExplorer';
 import EtfModal from '@/components/EtfModal';
 import FireCalculator from '@/components/FireCalculator';
 import InfoTooltip from '@/components/InfoTooltip';
+import AdSenseSlot from '@/components/AdSenseSlot';
 import { Sparkles, ShieldCheck, Flame, PieChart, Calendar, Calculator, Compass, ArrowRight } from 'lucide-react';
 
 interface MainAppProps {
@@ -188,6 +189,9 @@ export default function MainApp({ initialStocks }: MainAppProps) {
             onSelectStock={handleOpenModal}
           />
         )}
+
+        {/* 메인 화면 하단 반응형 광고 슬롯 */}
+        <AdSenseSlot slotId="main-bottom" />
       </main>
 
       {/* 모바일 전용 플로팅 담기 바 (담은 종목이 있고 탐색 탭일 때 즉시 시뮬레이터 점프) */}

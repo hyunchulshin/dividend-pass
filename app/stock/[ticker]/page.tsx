@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { getDividendStocks, getStockByTicker } from '@/lib/data';
+import StockMiniCalculator from '@/components/StockMiniCalculator';
+import AdSenseSlot from '@/components/AdSenseSlot';
+import { getDividendStocks, getStockByTicker, getRelatedStocks } from '@/lib/data';
 import { SITE_URL } from '@/lib/site';
 import {
   Sparkles,
@@ -86,6 +88,9 @@ export default async function StockDetailPage({ params }: StockPageProps) {
   if (!stock) {
     notFound();
   }
+
+  // 유사 배당률 및 동일 배당주기 추천 종목 4선 로드
+  const relatedStocks = await getRelatedStocks(stock, 4);
 
   const isKr = stock.market === 'KR';
   const isMonthly = stock.dividendCycle === 'MONTHLY';
@@ -250,7 +255,13 @@ export default async function StockDetailPage({ params }: StockPageProps) {
           </div>
         </section>
 
-        {/* 2. 6대 핵심 투자 지표 상세 테이블 */}
+        {/* 2. 단일 종목 실시간 목표 배당금 계산기 (검색 유입 체류시간 극대화 위젯) */}
+        <StockMiniCalculator stock={stock} />
+
+        {/* 상단 반응형 광고 슬롯 */}
+        <AdSenseSlot slotId="stock-detail-top" />
+
+        {/* 3. 6대 핵심 투자 지표 상세 테이블 */}
         <section className="space-y-4">
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
             <BarChart3 className="text-blue-600" size={20} />
@@ -415,7 +426,85 @@ export default async function StockDetailPage({ params }: StockPageProps) {
           </div>
         </section>
 
-        {/* 6. 금융 투자 면책고지 */}
+        {/* 중간 반응형 광고 슬롯 */}
+        <AdSenseSlot slotId="stock-detail-mid" />
+
+        {/* 6. 유사 배당률 및 동일 배당주기 추천 종목 4선 (연쇄 PV 및 체류시간 극대화) */}
+        {relatedStocks && relatedStocks.length > 0 && (
+          <section className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+                <Sparkles className="text-blue-600" size={20} />
+                <span>{stock.name}과(와) 유사한 추천 배당주 4선</span>
+              </h2>
+              <span className="text-xs text-slate-400">
+                동일 {cycleKorean} 및 유사 배당률 기준 4선
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              {relatedStocks.map((rel) => {
+                const relIsKr = rel.market === 'KR';
+                const relDps = relIsKr
+                  ? `${Math.round(rel.dpsTtm).toLocaleString()}원`
+                  : `$${rel.dpsTtm.toFixed(2)}`;
+                const relCycle =
+                  rel.dividendCycle === 'MONTHLY'
+                    ? '월배당'
+                    : rel.dividendCycle === 'QUARTERLY'
+                    ? '분기배당'
+                    : '연배당';
+
+                return (
+                  <Link
+                    key={rel.ticker}
+                    href={`/stock/${rel.ticker}`}
+                    className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between group space-y-3 cursor-pointer"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            relIsKr
+                              ? 'bg-rose-50 text-rose-600 border border-rose-200/60'
+                              : 'bg-blue-50 text-blue-600 border border-blue-200/60'
+                          }`}
+                        >
+                          {relIsKr ? '🇰🇷 국내' : '🇺🇸 미국'}
+                        </span>
+                        <span className="text-[11px] font-mono font-bold text-slate-400">
+                          {rel.ticker}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-2">
+                        {rel.name}
+                      </h3>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] text-slate-500">배당수익률</span>
+                        <span className="text-sm font-black text-emerald-600">
+                          {rel.dividendYield.toFixed(2)}%
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-slate-400">
+                        <span>배당주기</span>
+                        <span className="font-medium text-slate-600">{relCycle}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-slate-400">
+                        <span>연 DPS</span>
+                        <span className="font-medium text-slate-600">{relDps}</span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* 7. 금융 투자 면책고지 */}
         <section className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 text-xs text-slate-500 space-y-1.5">
           <div className="flex items-center gap-1.5 font-bold text-slate-700">
             <AlertCircle size={14} className="text-slate-500" />

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdSenseSlot from '@/components/AdSenseSlot';
 import {
   Percent,
   Sparkles,
@@ -193,6 +194,9 @@ export default function DividendTaxGuidePage() {
             </Link>
           </div>
         </section>
+
+        {/* 가이드 하단 반응형 광고 슬롯 */}
+        <AdSenseSlot slotId="guide-tax-bottom" />
 
         {/* 하단 네비게이션 */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-200/80">
