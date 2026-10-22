@@ -4,6 +4,9 @@ import { SITE_URL, ADSENSE_CLIENT_ID } from '@/lib/site';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: '/',
+  },
   title: {
     default: '배당패스 - 검증된 고배당주 & ETF 큐레이션',
     template: '%s | 배당패스',

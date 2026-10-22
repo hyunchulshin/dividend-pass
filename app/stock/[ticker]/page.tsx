@@ -67,6 +67,9 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
   return {
     title,
     description,
+    alternates: {
+      canonical: `/stock/${stock.ticker}`,
+    },
     openGraph: {
       title,
       description,

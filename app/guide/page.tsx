@@ -21,6 +21,9 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: '배당 투자 실전 가이드 센터 - 배당패스 (Dividend Pass)',
   description: '월배당 ETF 선별법, 배당소득세 15.4%와 2,000만 원 금융소득종합과세 절세 전략, TTM 배당수익률과 배당성향 분석법을 망라한 배당 투자 가이드입니다.',
+  alternates: {
+    canonical: '/guide',
+  },
   openGraph: {
     title: '배당 투자 실전 가이드 센터 - 배당패스',
     description: '실패 없는 배당 투자를 위한 3대 핵심 실전 가이드와 분석 기준을 무료로 제공합니다.',

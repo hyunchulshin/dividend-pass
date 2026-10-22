@@ -23,6 +23,9 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'TTM 배당수익률과 배당성향(Payout Ratio) 제대로 읽는 법 - 배당패스',
   description: 'Forward 배당률의 함정과 TTM 실측치 분석, 적정 배당성향(40~60%) 판별법, 배당 삭감(Dividend Cut) 위험 신호 3가지와 지속 가능한 고배당주 선별 가이드.',
+  alternates: {
+    canonical: '/guide/ttm-payout-ratio',
+  },
   openGraph: {
     title: 'TTM 배당수익률과 배당성향(Payout Ratio) 제대로 읽는 법 - 배당패스',
     description: '높은 배당수익률 뒤에 숨겨진 함정을 피하고 지속 가능한 알짜 배당주를 찾는 펀더멘털 분석 가이드.',

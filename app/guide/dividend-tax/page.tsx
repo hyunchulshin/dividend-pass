@@ -23,6 +23,9 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: '배당소득세 15.4%와 2,000만 원 금융소득종합과세 완벽 가이드 - 배당패스',
   description: '국내 배당소득세 15.4%와 미국 배당세 15.0% 원천징수 원리, 2,000만 원 초과 시 금융소득종합과세 누진세율 및 건보료 폭탄 방지, ISA·연금 절세 계좌 전략을 완벽 해설합니다.',
+  alternates: {
+    canonical: '/guide/dividend-tax',
+  },
   openGraph: {
     title: '배당소득세 15.4%와 2,000만 원 금융소득종합과세 완벽 가이드 - 배당패스',
     description: '배당 투자자의 최대 적인 세금과 건보료를 지키는 실전 절세 가이드! 배당패스에서 확인하세요.',

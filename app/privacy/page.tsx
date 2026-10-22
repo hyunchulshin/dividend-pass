@@ -7,6 +7,9 @@ import { ShieldCheck, Cookie, Lock, FileText, UserCheck, HelpCircle } from 'luci
 export const metadata: Metadata = {
   title: '개인정보처리방침 - 배당패스 (Dividend Pass)',
   description: '배당패스의 개인정보처리방침, 쿠키(Cookie) 정책 및 Google 애드센스 광고 게재 관련 규정 안내입니다.',
+  alternates: {
+    canonical: '/privacy',
+  },
 };
 
 export default function PrivacyPage() {
