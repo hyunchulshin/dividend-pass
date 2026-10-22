@@ -12,3 +12,6 @@ export const SITE_URL =
 
 export const ADSENSE_CLIENT_ID =
   process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-7329867453845073';
+
+export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID || '';
+
