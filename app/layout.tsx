@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'mXJRQUrNsyIWU9wFg_GKqfaaAK1arXoB5I1zDe9XNW8',
     other: {
-      'naver-site-verification': 'ab316e4138cc8603ff5eeea240b8ce69dd031ed9',
+      'naver-site-verification': '46a7406f7cb2d49f202eadbe36e4aa6c1c44df8b',
     },
   },
   other: {
@@ -77,7 +77,7 @@ export default function RootLayout({
         />
         <meta
           name="naver-site-verification"
-          content="ab316e4138cc8603ff5eeea240b8ce69dd031ed9"
+          content="46a7406f7cb2d49f202eadbe36e4aa6c1c44df8b"
         />
         <meta name="google-adsense-account" content={ADSENSE_CLIENT_ID} />
         <script
