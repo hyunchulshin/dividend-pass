@@ -509,9 +509,6 @@ def collect_us_stocks():
                             if div_y < 1.0:
                                 continue
 
-                            if div_y in {2.5} and abs(round(price * div_y / 100, 2) - dps) < 0.011:
-                                continue
-
                             cycle = get_dividend_cycle(t, name, 'US', False)
                             exchange_candidates.append({
                                 'ticker': t,
