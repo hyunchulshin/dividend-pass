@@ -49,10 +49,14 @@ export default function Footer() {
           실제 투자에 대한 모든 판단과 책임은 투자자 본인에게 있습니다.
         </p>
 
-        {/* 저작권 표기 */}
-        <p className="text-[11px] text-slate-400 font-mono">
-          © 2026 Dividend Pass · RainShine Team. All rights reserved.
-        </p>
+        {/* 브랜딩 및 저작권 표기 */}
+        <div className="flex items-center justify-center gap-2 text-[11px] sm:text-xs text-slate-500 pt-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/snowmango-badge.png" alt="Snowmango Icon" className="h-4 w-4 rounded-xs" />
+          <span className="font-semibold text-slate-700">A product by snowmango</span>
+          <span className="text-slate-300">·</span>
+          <span>© 2026 Dividend Pass. All rights reserved.</span>
+        </div>
       </div>
     </footer>
   );

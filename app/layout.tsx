@@ -25,7 +25,16 @@ export const metadata: Metadata = {
     '파이어족',
     '배당소득세',
   ],
-  authors: [{ name: 'RainShine Team' }],
+  authors: [{ name: 'Snowmango Team' }],
+  icons: {
+    icon: [
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-64.png', sizes: '64x64', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     title: '배당패스 - 검증된 고배당주 & ETF 큐레이션',
     description:

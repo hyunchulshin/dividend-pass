@@ -126,9 +126,9 @@ export default function TermsPage() {
         <section className="space-y-2 text-xs text-slate-500 border-t border-slate-200 pt-6">
           <h3 className="font-bold text-slate-700">5. 운영팀 정보 및 약관 관련 문의</h3>
           <p>
-            본 약관 및 서비스 이용과 관련된 문의 사항은 운영팀(RainShine Team,{' '}
-            <a href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EC%95%BD%EA%B4%80%20%EB%AC%B8%EC%9D%98" className="text-blue-600 underline">
-              rainshine.email@gmail.com
+            본 약관 및 서비스 이용과 관련된 문의 사항은 운영팀(Snowmango Team,{' '}
+            <a href="mailto:contact@snowmango.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EC%95%BD%EA%B4%80%20%EB%AC%B8%EC%9D%98" className="text-blue-600 underline">
+              contact@snowmango.com
             </a>
             ) 또는 <Link href="/contact" className="text-blue-600 underline font-medium">문의하기</Link> 페이지를 통해 접수해 주시기 바랍니다.
           </p>

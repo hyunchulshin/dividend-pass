@@ -42,17 +42,17 @@ export default function ContactPage() {
             </div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-bold text-slate-900">공식 이메일 문의</h2>
-              <span className="text-xs px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-semibold">RainShine Team</span>
+              <span className="text-xs px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-semibold">Snowmango Team</span>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              가장 빠르고 정확하게 운영진(RainShine Team)에게 전달되는 공식 창구입니다. 주말 및 공휴일을 제외하고 보통 24시간 이내에 회신드립니다.
+              가장 빠르고 정확하게 운영진(Snowmango Team)에게 전달되는 공식 창구입니다. 주말 및 공휴일을 제외하고 보통 24시간 이내에 회신드립니다.
             </p>
             <div className="pt-2">
               <a
-                href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EB%AC%B8%EC%9D%98"
+                href="mailto:contact@snowmango.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EB%AC%B8%EC%9D%98"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-blue-600 font-bold text-xs sm:text-sm hover:border-blue-400 hover:shadow-xs transition-all"
               >
-                <span>rainshine.email@gmail.com</span>
+                <span>contact@snowmango.com</span>
                 <Send size={14} />
               </a>
             </div>
@@ -68,7 +68,7 @@ export default function ContactPage() {
             </p>
             <div className="pt-2 flex items-center justify-between gap-2 flex-wrap">
               <a
-                href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EC%A0%9C%EB%B3%B4%5D%20"
+                href="mailto:contact@snowmango.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EC%A0%9C%EB%B3%B4%5D%20"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
               >
                 <Send size={12} />

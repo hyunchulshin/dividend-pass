@@ -22,8 +22,9 @@ export default function AboutPage() {
         {/* 상단 헤더 */}
         <section className="space-y-3 border-b border-slate-200/80 pb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/60 shadow-xs">
-            <Sparkles size={13} className="text-blue-600" />
-            <span>About Dividend Pass</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/snowmango-badge.png" alt="Snowmango" className="h-3.5 w-3.5 rounded-xs" />
+            <span>A product by Snowmango</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
             배당패스 (Dividend Pass) 소개
@@ -133,13 +134,15 @@ export default function AboutPage() {
 
         {/* 4. 운영팀 안내 */}
         <section className="p-5 rounded-2xl bg-slate-50 border border-slate-200/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm text-slate-600">
-          <div>
-            <span className="font-bold text-slate-800">운영 및 관리: </span>
-            <span className="font-semibold text-slate-900">RainShine Team</span>
-            <span className="text-slate-400 mx-2">|</span>
+          <div className="flex items-center flex-wrap gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/snowmango-badge.png" alt="Snowmango" className="h-4 w-4 rounded-xs" />
+            <span className="font-bold text-slate-800">운영 및 개발: </span>
+            <span className="font-semibold text-slate-900">Snowmango Team</span>
+            <span className="text-slate-400 mx-1">|</span>
             <span>공식 문의: </span>
-            <a href="mailto:rainshine.email@gmail.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EB%AC%B8%EC%9D%98" className="text-blue-600 font-semibold underline">
-              rainshine.email@gmail.com
+            <a href="mailto:contact@snowmango.com?subject=%5B%EB%B0%B0%EB%8B%B9%ED%8C%A8%EC%8A%A4%5D%20%EB%AC%B8%EC%9D%98" className="text-blue-600 font-semibold underline">
+              contact@snowmango.com
             </a>
           </div>
           <Link

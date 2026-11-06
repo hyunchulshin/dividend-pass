@@ -97,7 +97,7 @@ export default async function GuideArticleDetailPage({ params }: GuideSlugPagePr
     dateModified: article.publishedAt,
     author: {
       '@type': 'Organization',
-      name: '배당패스 리서치팀 (RainShine Team)',
+      name: '배당패스 리서치팀 (Snowmango Team)',
       url: SITE_URL,
     },
     publisher: {
