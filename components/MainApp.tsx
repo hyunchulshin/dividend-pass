@@ -178,29 +178,31 @@ export default function MainApp({ initialStocks }: MainAppProps) {
             <button
               type="button"
               onClick={() => setNavTab('explorer')}
-              className={`flex-1 py-2.5 px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2.5 px-2.5 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${
                 navTab === 'explorer'
                   ? 'bg-white text-blue-600 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Compass size={17} />
-              <span>3대 큐레이션 탐색</span>
+              <Compass size={16} className="shrink-0" />
+              <span className="sm:hidden">3대 큐레이션</span>
+              <span className="hidden sm:inline">3대 큐레이션 탐색</span>
             </button>
 
             <button
               type="button"
               onClick={() => setNavTab('calculator')}
-              className={`flex-1 py-2.5 px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-2 relative ${
+              className={`flex-1 py-2.5 px-2.5 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-1.5 sm:gap-2 relative whitespace-nowrap ${
                 navTab === 'calculator'
                   ? 'bg-white text-blue-600 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Calculator size={17} />
-              <span>파이어 역산 시뮬레이터</span>
+              <Calculator size={16} className="shrink-0" />
+              <span className="sm:hidden">파이어 역산기</span>
+              <span className="hidden sm:inline">파이어 역산 시뮬레이터</span>
               {portfolio.length > 0 && (
-                <span className="ml-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px] font-mono leading-none">
+                <span className="ml-0.5 sm:ml-1 px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] sm:text-[11px] font-mono leading-none">
                   {portfolio.length}
                 </span>
               )}
@@ -362,7 +364,7 @@ export default function MainApp({ initialStocks }: MainAppProps) {
 
       {/* 모바일 전용 플로팅 담기 바 (담은 종목이 있고 탐색 탭일 때 즉시 시뮬레이터 점프) */}
       {portfolio.length > 0 && navTab === 'explorer' && (
-        <aside className="sm:hidden fixed bottom-4 left-4 right-4 z-40 animate-in slide-in-from-bottom-3 duration-200">
+        <aside className="sm:hidden fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 right-4 z-40 animate-in slide-in-from-bottom-3 duration-200">
           <div className="bg-slate-900/95 text-white p-3 rounded-2xl shadow-xl backdrop-blur-md border border-slate-800 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
               <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-mono text-xs flex items-center justify-center font-black shrink-0">

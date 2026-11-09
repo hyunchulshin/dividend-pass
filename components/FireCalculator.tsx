@@ -481,13 +481,14 @@ export default function FireCalculator({
                         />
                       </div>
 
-                      {/* 하단 월 라벨 */}
+                      {/* 하단 월 라벨 (모바일 320px에서 겹침 방지: sm 미만은 숫자만, sm 이상은 월 표기) */}
                       <span
-                        className={`text-[10px] mt-2 font-mono font-bold ${
+                        className={`text-[10px] mt-2 font-mono font-bold leading-none ${
                           isMax ? 'text-blue-700' : 'text-slate-500'
                         }`}
                       >
-                        {idx + 1}월
+                        <span className="sm:hidden">{idx + 1}</span>
+                        <span className="hidden sm:inline">{idx + 1}월</span>
                       </span>
                     </div>
                   );
@@ -621,9 +622,9 @@ export default function FireCalculator({
                     </div>
 
                     {/* 세후 월 배당 수령액 */}
-                    <div className="flex items-center justify-between text-xs text-slate-500 pt-0.5">
-                      <span>예상 세후 실수령:</span>
-                      <span className="font-bold text-emerald-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-slate-500 pt-0.5">
+                      <span className="shrink-0">예상 세후 실수령:</span>
+                      <span className="font-bold text-emerald-600 sm:text-right">
                         월 {Math.round(annualNetDpsWon / 12).toLocaleString()}원 (연 {Math.round(annualNetDpsWon).toLocaleString()}원)
                       </span>
                     </div>

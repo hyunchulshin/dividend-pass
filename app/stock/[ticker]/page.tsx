@@ -654,12 +654,12 @@ export default async function StockDetailPage({ params }: StockPageProps) {
         </section>
 
         {/* 하단 네비게이션 버튼 */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-slate-200/80">
           <Link
             href="/#stock-explorer"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors"
           >
-            <ArrowLeft size={14} />
+            <ArrowLeft size={14} className="shrink-0" />
             <span>500개 배당주 탐색으로 돌아가기</span>
           </Link>
           <Link
@@ -667,7 +667,7 @@ export default async function StockDetailPage({ params }: StockPageProps) {
             className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
           >
             <span>이 종목으로 파이어 역산하기</span>
-            <ArrowRight size={14} />
+            <ArrowRight size={14} className="shrink-0" />
           </Link>
         </div>
       </main>

@@ -90,7 +90,7 @@ export default function PrivacyPage() {
                   href="https://www.google.com/settings/ads"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 underline font-medium"
+                  className="text-blue-600 underline font-medium break-all"
                 >
                   https://www.google.com/settings/ads
                 </a>

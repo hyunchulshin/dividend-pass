@@ -259,10 +259,10 @@ export default function EtfModal({
             </button>
             <Link
               href={`/stock/${stock.ticker}`}
-              className="w-full py-1 text-center text-xs font-semibold text-slate-500 hover:text-blue-600 flex items-center justify-center gap-1 transition-colors"
+              className="w-full py-1 text-center text-xs font-semibold text-slate-500 hover:text-blue-600 flex items-center justify-center gap-1 transition-colors px-2"
             >
-              <span>{stock.name} 고유 상세 분석 페이지 보기</span>
-              <ExternalLink size={12} />
+              <span className="truncate max-w-[240px] sm:max-w-none">{stock.name} 상세 리포트 보기</span>
+              <ExternalLink size={12} className="shrink-0" />
             </Link>
           </div>
         </div>

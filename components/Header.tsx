@@ -32,11 +32,11 @@ export default function Header() {
         </Link>
 
         {/* 중앙 & 우측 네비게이션 메뉴 및 안전필터 안내 */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           <nav aria-label="주요 메뉴" className="flex items-center gap-1 sm:gap-2">
             <Link
               href="/guide"
-              className="inline-flex items-center gap-1 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/70 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold px-2 sm:px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/70 transition-colors"
             >
               <BookOpen size={13} className="text-blue-600 shrink-0" />
               <span>배당 가이드</span>
@@ -54,13 +54,13 @@ export default function Header() {
             <span>실측 데이터 100%</span>
           </div>
 
-          <div className="flex items-center gap-1 text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 sm:px-3 py-1 rounded-full border border-emerald-200/60 shadow-xs">
+          <div className="flex items-center gap-1 text-xs font-semibold bg-emerald-50 text-emerald-700 px-2 sm:px-3 py-1.5 rounded-full border border-emerald-200/60 shadow-xs">
             <ShieldCheck size={13} className="stroke-[2.5] shrink-0" />
             <span className="hidden sm:inline">안전 필터 통과</span>
             <span className="sm:hidden text-[11px]">안전필터</span>
           </div>
 
-          <InfoTooltip type="safety" iconSize={16} />
+          <InfoTooltip type="safety" iconSize={16} placement="bottom" />
         </div>
       </div>
     </header>

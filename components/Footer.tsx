@@ -50,11 +50,13 @@ export default function Footer() {
         </p>
 
         {/* 브랜딩 및 저작권 표기 */}
-        <div className="flex items-center justify-center gap-2 text-[11px] sm:text-xs text-slate-500 pt-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/snowmango-badge.png" alt="Snowmango Icon" className="h-4 w-4 rounded-xs" />
-          <span className="font-semibold text-slate-700">A product by snowmango</span>
-          <span className="text-slate-300">·</span>
+        <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 text-[11px] sm:text-xs text-slate-500 pt-1">
+          <div className="inline-flex items-center gap-1.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/snowmango-badge.png" alt="Snowmango Icon" className="h-4 w-4 rounded-xs shrink-0" />
+            <span className="font-semibold text-slate-700">A product by snowmango</span>
+          </div>
+          <span className="text-slate-300 hidden sm:inline">·</span>
           <span>© 2026 Dividend Pass. All rights reserved.</span>
         </div>
       </div>
