@@ -1,6 +1,5 @@
 'use client';
 
-import { SnowmangoSuiteBanner } from '@/components/SnowmangoSuiteBanner';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -402,9 +401,6 @@ export default function MainApp({ initialStocks }: MainAppProps) {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <SnowmangoSuiteBanner />
-      </div>
       {/* 글로벌 푸터 */}
       <Footer />
     </div>
