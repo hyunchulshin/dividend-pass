@@ -1,5 +1,6 @@
-import { SnowmangoSuiteBanner } from '@/components/SnowmangoSuiteBanner';
 'use client';
+
+import { SnowmangoSuiteBanner } from '@/components/SnowmangoSuiteBanner';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
