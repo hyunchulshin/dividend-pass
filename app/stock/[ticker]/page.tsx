@@ -66,10 +66,8 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
   const title = `${stock.name} (${stock.ticker}) 배당금·배당수익률·월배당 역산 분석 리포트 - 배당패스`;
   const description = `${stock.name}(${stock.ticker})의 과거 12개월(TTM) 배당수익률 ${stock.dividendYield.toFixed(2)}%, 연간 주당 배당금 ${formattedDps}, ${cycleKorean} 주기, 월 30만·100만 원 배당 달성 필요 원금 및 절세 계좌 시뮬레이션 리포트.`;
 
-  // 인기점수 상위 핵심 대표 종목(85점 이상)만 검색엔진 색인 허용하여
-  // 대량 프로그래매틱 페이지로 인한 중복/저품질(Thin Content) 판정 원천 차단
-  const isFlagshipStock = stock.popularityScore >= 85;
-
+  // 대량 자동생성 종목 페이지의 Thin Content 색인 방지를 위해 noindex, follow 적용
+  // (사용자의 종목 페이지 직접 열람 및 내부 링크 탐색 기능은 100% 그대로 유지)
   return {
     title,
     description,
@@ -77,7 +75,7 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
       canonical: `/stock/${stock.ticker}`,
     },
     robots: {
-      index: isFlagshipStock,
+      index: false,
       follow: true,
     },
     openGraph: {
