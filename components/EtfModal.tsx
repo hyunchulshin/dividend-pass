@@ -113,7 +113,13 @@ export default function EtfModal({
                     : 'bg-slate-100 text-slate-600'
                 }`}
               >
-                {isMonthly ? '🗓️ 월배당 지급' : `${stock.dividendCycle} 배당`}
+                {isMonthly
+                  ? '🗓️ 월배당 지급'
+                  : stock.dividendCycle === 'SEMI_ANNUAL'
+                  ? '반기배당 (연 2회)'
+                  : stock.dividendCycle === 'QUARTERLY'
+                  ? '분기배당 (연 4회)'
+                  : '연배당 (연 1회)'}
               </span>
               {stock.isHighRisk && (
                 <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
@@ -259,6 +265,7 @@ export default function EtfModal({
             </button>
             <Link
               href={`/stock/${stock.ticker}`}
+              rel="nofollow"
               className="w-full py-1 text-center text-xs font-semibold text-slate-500 hover:text-blue-600 flex items-center justify-center gap-1 transition-colors px-2"
             >
               <span className="truncate max-w-[240px] sm:max-w-none">{stock.name} 상세 리포트 보기</span>

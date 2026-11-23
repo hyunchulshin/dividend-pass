@@ -6,7 +6,7 @@ import { Sparkles, Database, ShieldCheck, Flame, PieChart, Layers, Target, Arrow
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: '서비스 소개 - 배당패스 (Dividend Pass)',
+  title: '서비스 소개',
   description: '배당패스의 기획 의도, 500개 고배당주 실측 데이터 파이프라인, 인기 점수 알고리즘 및 투명성 기준을 소개합니다.',
   alternates: {
     canonical: '/about',

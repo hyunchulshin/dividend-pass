@@ -41,19 +41,19 @@ export async function generateMetadata({ params }: GuideSlugPageProps): Promise<
   const article = getGuideArticleBySlug(params.slug);
   if (!article) {
     return {
-      title: '가이드를 찾을 수 없습니다 - 배당패스',
+      title: '가이드를 찾을 수 없습니다',
     };
   }
 
   return {
-    title: `${article.title} - 배당패스`,
+    title: article.title,
     description: article.description,
     keywords: [...article.tags, '배당패스', '배당주 투자', '파이어족'],
     alternates: {
       canonical: `/guide/${article.slug}`,
     },
     openGraph: {
-      title: `${article.title} - 배당패스`,
+      title: `${article.title} | 배당패스`,
       description: article.description,
       type: 'article',
       publishedTime: article.publishedAt,
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: GuideSlugPageProps): Promise<
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${article.title} - 배당패스`,
+      title: `${article.title} | 배당패스`,
       description: article.description,
     },
   };
@@ -97,7 +97,7 @@ export default async function GuideArticleDetailPage({ params }: GuideSlugPagePr
     dateModified: article.publishedAt,
     author: {
       '@type': 'Organization',
-      name: '배당패스 리서치팀 (Snowmango Team)',
+      name: 'KRX·DART·SEC 공시 기반 배당패스 에디토리얼',
       url: SITE_URL,
     },
     publisher: {
@@ -321,6 +321,7 @@ export default async function GuideArticleDetailPage({ params }: GuideSlugPagePr
                   <Link
                     key={stk.ticker}
                     href={`/stock/${stk.ticker}`}
+                    rel="nofollow"
                     className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between group space-y-3"
                   >
                     <div className="space-y-1.5">

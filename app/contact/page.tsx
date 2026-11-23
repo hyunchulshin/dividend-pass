@@ -6,7 +6,7 @@ import { Mail, MessageSquare, Send, HelpCircle, CheckCircle2 } from 'lucide-reac
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: '문의하기 - 배당패스 (Dividend Pass)',
+  title: '문의하기',
   description: '배당패스 운영진에게 데이터 오류 제보, 신규 배당 ETF 건의, 제휴 및 피드백을 전달할 수 있는 공식 문의 채널입니다.',
   alternates: {
     canonical: '/contact',

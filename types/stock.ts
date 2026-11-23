@@ -4,7 +4,7 @@
  */
 
 export type Market = 'KR' | 'US';
-export type DividendCycle = 'MONTHLY' | 'QUARTERLY' | 'ANNUAL';
+export type DividendCycle = 'MONTHLY' | 'QUARTERLY' | 'SEMI_ANNUAL' | 'ANNUAL';
 export type AssetType = 'ETF' | 'STOCK';
 export type YieldBasis = 'TTM' | 'ANNUALIZED';
 

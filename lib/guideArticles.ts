@@ -42,6 +42,7 @@ export interface GuideSummaryItem {
   category: '월배당 & ETF 분석' | '세금 & 절세 전략' | '파이어족 로드맵' | '배당주 실전 기법';
   readTime: string;
   badge: string;
+  publishedAt: string;
   tags: string[];
 }
 
@@ -961,6 +962,7 @@ export const ALL_GUIDE_SUMMARIES: GuideSummaryItem[] = [
     category: '월배당 & ETF 분석',
     readTime: '4분 소요',
     badge: '🔥 인기 필독',
+    publishedAt: '2026-10-12',
     tags: ['커버드콜', '제살깎아먹기', '총보수율', '월배당TOP10'],
   },
   {
@@ -971,6 +973,7 @@ export const ALL_GUIDE_SUMMARIES: GuideSummaryItem[] = [
     category: '세금 & 절세 전략',
     readTime: '5분 소요',
     badge: '💰 절세 필수',
+    publishedAt: '2026-10-12',
     tags: ['15.4%', '2,000만원종합과세', 'ISA계좌', '세후실수령'],
   },
   {
@@ -981,6 +984,7 @@ export const ALL_GUIDE_SUMMARIES: GuideSummaryItem[] = [
     category: '배당주 실전 기법',
     readTime: '4분 소요',
     badge: '🏛️ 안전 필터링',
+    publishedAt: '2026-10-12',
     tags: ['TTM실측치', '배당트랩', '배당성향', 'FCF현금흐름'],
   },
   ...DYNAMIC_GUIDE_ARTICLES.map((art) => ({
@@ -991,6 +995,7 @@ export const ALL_GUIDE_SUMMARIES: GuideSummaryItem[] = [
     category: art.category,
     readTime: art.readTime,
     badge: art.badge,
+    publishedAt: art.publishedAt,
     tags: art.tags,
   })),
 ];

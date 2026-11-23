@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
   const stock = await getStockByTicker(params.ticker);
   if (!stock) {
     return {
-      title: '종목을 찾을 수 없습니다 - 배당패스',
+      title: '종목을 찾을 수 없습니다',
     };
   }
 
@@ -61,9 +61,11 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
       ? '월배당'
       : stock.dividendCycle === 'QUARTERLY'
       ? '분기배당'
+      : stock.dividendCycle === 'SEMI_ANNUAL'
+      ? '반기배당'
       : '연배당';
 
-  const title = `${stock.name} (${stock.ticker}) 배당금·배당수익률·월배당 역산 분석 리포트 - 배당패스`;
+  const title = `${stock.name} (${stock.ticker}) 배당금·배당수익률·월배당 역산 분석 리포트`;
   const description = `${stock.name}(${stock.ticker})의 과거 12개월(TTM) 배당수익률 ${stock.dividendYield.toFixed(2)}%, 연간 주당 배당금 ${formattedDps}, ${cycleKorean} 주기, 월 30만·100만 원 배당 달성 필요 원금 및 절세 계좌 시뮬레이션 리포트.`;
 
   // 대량 자동생성 종목 페이지의 Thin Content 색인 방지를 위해 noindex, follow 적용
@@ -135,6 +137,8 @@ export default async function StockDetailPage({ params }: StockPageProps) {
       ? '매월 (월배당)'
       : stock.dividendCycle === 'QUARTERLY'
       ? '분기별 (3·6·9·12월)'
+      : stock.dividendCycle === 'SEMI_ANNUAL'
+      ? '반기별 (6·12월 기준)'
       : '연 1회 (연배당)';
 
   // 세율 안내
@@ -276,6 +280,8 @@ export default async function StockDetailPage({ params }: StockPageProps) {
                   ? '매월 지급'
                   : stock.dividendCycle === 'QUARTERLY'
                   ? '분기 지급'
+                  : stock.dividendCycle === 'SEMI_ANNUAL'
+                  ? '반기 지급'
                   : '연간 지급'}
               </div>
               <p className="text-[11px] text-slate-400">{cycleKorean}</p>
@@ -351,7 +357,7 @@ export default async function StockDetailPage({ params }: StockPageProps) {
               <span>{stock.name} 목표 월 배당금별 필요 주식 수 & 투자 원금 조견표</span>
             </h2>
             <p className="text-xs text-slate-500">
-              {isKr ? '국내 배당소득세(15.4%)' : '미국 현지 배당소득세(15.0%, 환율 1,350원 기준)'} 차감 후 실제 통장에 입금되는 세후 월평균 수령액 기준 역산 결과입니다.
+              {isKr ? '국내 배당소득세(15.4%)' : '미국 현지 배당소득세(15.0%, 기준 환율 1,400원 가정 · 실제 환율에 따라 변동)'} 차감 후 실제 통장에 입금되는 세후 월평균 수령액 기준 역산 결과입니다.
             </p>
           </div>
 
@@ -589,12 +595,15 @@ export default async function StockDetailPage({ params }: StockPageProps) {
                     ? '월배당'
                     : rel.dividendCycle === 'QUARTERLY'
                     ? '분기배당'
+                    : rel.dividendCycle === 'SEMI_ANNUAL'
+                    ? '반기배당'
                     : '연배당';
 
                 return (
                   <Link
                     key={rel.ticker}
                     href={`/stock/${rel.ticker}`}
+                    rel="nofollow"
                     className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between group space-y-3 cursor-pointer"
                   >
                     <div className="space-y-2">

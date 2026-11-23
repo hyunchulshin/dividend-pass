@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import { AlertTriangle, FileCheck, ShieldAlert, Scale, HelpCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: '이용약관 및 투자 면책고지 - 배당패스 (Dividend Pass)',
+  title: '이용약관 및 투자 면책고지',
   description: '배당패스의 이용약관, 금융 투자 면책고지(Disclaimer) 및 서비스 이용 주의사항을 안내합니다.',
   alternates: {
     canonical: '/terms',

@@ -43,7 +43,11 @@ KNOWN_MONTHLY_KR_KEYWORDS = [
 KNOWN_QUARTERLY_KR_TICKERS = {
     '005930', '005935', '005380', '005385', '005387', '000270', '105560',
     '055550', '086790', '316140', '017670', '005490', '034730', '032830',
-    '030200', '032640', '012330', '018880', '088980', '097950'
+    '030200', '032640', '012330', '018880', '097950'
+}
+
+KNOWN_SEMI_ANNUAL_KR_TICKERS = {
+    '088980'
 }
 
 TOP_HOLDINGS_DICT = {
@@ -99,6 +103,8 @@ def get_dividend_cycle(ticker, name, market, is_etf):
                 return 'QUARTERLY'
             return 'ANNUAL'
         else:
+            if ticker in KNOWN_SEMI_ANNUAL_KR_TICKERS:
+                return 'SEMI_ANNUAL'
             if ticker in KNOWN_QUARTERLY_KR_TICKERS:
                 return 'QUARTERLY'
             return 'ANNUAL'

@@ -54,7 +54,9 @@ export interface StockDeepAnalysis {
   faqs: StockFaqItem[];
 }
 
-const USD_KRW_RATE = 1350;
+// 시뮬레이션 기본 원/달러 기준 환율 (실제 환전·배당 입금 시점의 시장 환율에 따라 변동)
+export const DEFAULT_USD_KRW_RATE = 1400;
+const USD_KRW_RATE = DEFAULT_USD_KRW_RATE;
 
 export function formatWonHuman(amountWon: number): string {
   const rounded = Math.round(amountWon);
@@ -198,6 +200,8 @@ export function generateStockDeepAnalysis(
       ? '월배당(연 12회 지급)'
       : stock.dividendCycle === 'QUARTERLY'
       ? '분기배당(연 4회 지급)'
+      : stock.dividendCycle === 'SEMI_ANNUAL'
+      ? '반기배당(연 2회 · 6·12월 결산 지급)'
       : '연배당(연 1회 결산 지급)';
 
   let yieldTierTitle = '';
@@ -242,6 +246,8 @@ export function generateStockDeepAnalysis(
     cycleStrategyAnalysis = `${stock.name}의 가장 큰 강점은 ${cycleLabel} 구조라는 점입니다. 동일 시장 내 월배당 종목 ${metrics.sameCycleCount}개 중 배당수익률 ${metrics.sameCycleYieldRank}위를 차지하고 있으며, 매월 분배금이 입금되므로 별도의 배당월 조합 없이 단일 종목만으로도 매달 고정적인 현금흐름을 창출할 수 있습니다. 특히 매달 들어오는 분배금을 즉시 재매수(DRIP)할 경우 연 1회 배당주 대비 복리 회전 속도가 12배 빨라져 보유 주식 수를 빠르게 늘리는 데 유리합니다.`;
   } else if (stock.dividendCycle === 'QUARTERLY') {
     cycleStrategyAnalysis = `${stock.name}은(는) ${cycleLabel} 방식을 채택하고 있으며, 동일 시장 내 분기배당 종목 ${metrics.sameCycleCount}개 중 배당수익률 ${metrics.sameCycleYieldRank}위에 해당합니다. 3개월마다 정기적인 현금흐름이 발생하므로, 지급월이 서로 다른 분기배당 종목 2~3개 또는 월배당 ETF와 교차 편입하면 1년 12개월 끊김 없는 월간 배당 캘린더를 완성할 수 있습니다.`;
+  } else if (stock.dividendCycle === 'SEMI_ANNUAL') {
+    cycleStrategyAnalysis = `${stock.name}은(는) ${cycleLabel} 방식을 채택하고 있습니다. 상·하반기(통상 6월 말·12월 말 기준, 8월·2월 입금) 연 2회 분배금이 지급되므로 분기배당주나 월배당 ETF와 조합해 연중 현금흐름 공백을 메우는 데 유용합니다.`;
   } else {
     cycleStrategyAnalysis = `${stock.name}은(는) ${cycleLabel} 특성을 가진 종목으로, 동일 시장 내 연배당 종목 ${metrics.sameCycleCount}개 가운데 배당수익률 ${metrics.sameCycleYieldRank}위를 기록하고 있습니다. 연말 또는 결산 기준일에 맞춰 1년 치 배당금이 일괄 지급되므로 배당락일 전후의 주가 변동성과 매수 타이밍을 면밀히 점검하는 것이 중요하며, 평달 현금흐름을 보완하기 위해 월배당 ETF와 병행 구성하는 전략이 효과적입니다.`;
   }
@@ -249,7 +255,7 @@ export function generateStockDeepAnalysis(
   // 7. 계좌별 세금 시뮬레이션 해설 문단
   const taxAccountAnalysis = isKr
     ? `현재 ${stock.name}(${stock.ticker})에 5,000만 원을 투자할 경우 약 ${capital50mSim.shares.toLocaleString()}주를 매수할 수 있으며, 연간 세전 배당금은 약 ${Math.round(capital50mSim.annualGrossWon).toLocaleString()}원입니다. 일반 위탁계좌에서 보유 시 15.4% 원천징수세로 매년 약 ${Math.round(capital50mSim.generalAccountTaxWon).toLocaleString()}원이 차감되어 세후 연 ${Math.round(capital50mSim.generalAccountNetWon).toLocaleString()}(월평균 약 ${Math.round(capital50mSim.monthlyNetWon).toLocaleString()}원)을 수령하게 됩니다. 반면 중개형 ISA 계좌를 활용하면 비과세(200만 원~400만 원) 및 9.9% 분리과세 혜택 덕분에 일반계좌 대비 매년 약 ${Math.round(capital50mSim.isaSavedTaxWon).toLocaleString()}원의 세금을 아낄 수 있습니다.`
-    : `현재 ${stock.name}(${stock.ticker})에 원화 환산 5,000만 원(환율 1,350원 기준)을 투자할 경우 약 ${capital50mSim.shares.toLocaleString()}주를 보유하게 되며, 연간 세전 배당금은 약 ${Math.round(capital50mSim.annualGrossWon).toLocaleString()}원입니다. 미국 현지 배당소득세율 15.0%가 원천징수되어 매년 약 ${Math.round(capital50mSim.generalAccountTaxWon).toLocaleString()}원의 세금 차감 후 연 ${Math.round(capital50mSim.generalAccountNetWon).toLocaleString()}(월평균 약 ${Math.round(capital50mSim.monthlyNetWon).toLocaleString()}원)이 입금됩니다. 연간 해외주식 배당금과 국내 금융소득 합산액이 2,000만 원을 넘지 않도록 관리하고, 환차손익(비과세)과 배당소득(과세)의 균형을 맞추는 것이 핵심입니다.`;
+    : `현재 ${stock.name}(${stock.ticker})에 원화 환산 5,000만 원(기준 환율 ${USD_KRW_RATE.toLocaleString()}원 가정 · 실제 환전 시점 환율에 따라 변동)을 투자할 경우 약 ${capital50mSim.shares.toLocaleString()}주를 보유하게 되며, 연간 세전 배당금은 약 ${Math.round(capital50mSim.annualGrossWon).toLocaleString()}원입니다. 미국 현지 배당소득세율 15.0%가 원천징수되어 매년 약 ${Math.round(capital50mSim.generalAccountTaxWon).toLocaleString()}원의 세금 차감 후 연 ${Math.round(capital50mSim.generalAccountNetWon).toLocaleString()}(월평균 약 ${Math.round(capital50mSim.monthlyNetWon).toLocaleString()}원)이 입금됩니다. 연간 해외주식 배당금과 국내 금융소득 합산액이 2,000만 원을 넘지 않도록 관리하고, 환차손익(비과세)과 배당소득(과세)의 균형을 맞추는 것이 핵심입니다.`;
 
   // 8. 종목별 고유 FAQ 4문 4답 생성
   const sim100m = scenarios.find((s) => s.targetMonthlyNetWon === 1_000_000) || scenarios[3];

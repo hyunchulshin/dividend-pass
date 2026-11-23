@@ -75,7 +75,13 @@ export default function StockCard({
                 : 'bg-slate-100 text-slate-600'
             }`}
           >
-            {isMonthly ? '🗓️ 월배당' : stock.dividendCycle}
+            {isMonthly
+              ? '🗓️ 월배당'
+              : stock.dividendCycle === 'SEMI_ANNUAL'
+              ? '반기배당'
+              : stock.dividendCycle === 'QUARTERLY'
+              ? '분기배당'
+              : '연배당'}
           </span>
 
           {/* 인라인 담기 버튼 */}

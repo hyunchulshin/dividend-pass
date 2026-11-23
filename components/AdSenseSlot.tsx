@@ -16,9 +16,10 @@ export default function AdSenseSlot({
   className = '',
 }: AdSenseSlotProps) {
   const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const isValidSlot = Boolean(slotId && /^\d+$/.test(slotId));
 
   useEffect(() => {
-    if (clientId) {
+    if (clientId && isValidSlot) {
       try {
         // @ts-expect-error window.adsbygoogle global
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -27,11 +28,10 @@ export default function AdSenseSlot({
         console.debug('AdSense script error:', err);
       }
     }
-  }, [clientId]);
+  }, [clientId, isValidSlot]);
 
-  // 애드센스 클라이언트 ID가 아직 환경변수에 등록되지 않은 상태(심사 단계)에서는
-  // 사용자 경험을 위해 불필요한 빈 여백이나 깨진 박스를 남기지 않고 null 반환
-  if (!clientId) {
+  // 애드센스 클라이언트 ID 미등록 또는 유효한 순수 숫자 slotId(/^\d+$/)가 아닌 더미 문자열일 경우 null 반환
+  if (!clientId || !isValidSlot) {
     return null;
   }
 

@@ -68,8 +68,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -80,15 +79,6 @@ export default function RootLayout({
   return (
     <html lang="ko" className="overflow-x-hidden max-w-full">
       <head>
-        <meta
-          name="google-site-verification"
-          content="mXJRQUrNsyIWU9wFg_GKqfaaAK1arXoB5I1zDe9XNW8"
-        />
-        <meta
-          name="naver-site-verification"
-          content="46a7406f7cb2d49f202eadbe36e4aa6c1c44df8b"
-        />
-        <meta name="google-adsense-account" content={ADSENSE_CLIENT_ID} />
         <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}

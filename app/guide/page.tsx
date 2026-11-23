@@ -16,16 +16,16 @@ import {
 import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: '배당 투자 실전 가이드 센터 (13대 심층 칼럼) - 배당패스 (Dividend Pass)',
+  title: '배당 투자 실전 가이드 센터 (16편 심층 칼럼)',
   description:
     '월배당 ETF 선별법, 파이어족 월 100만·300만 원 로드맵, SCHD vs JEPI 비교, 배당소득세 15.4%와 2,000만 원 금융소득종합과세·건보료 방어 전략, 리츠·배당귀족주 분석법을 총망라한 배당 투자 전문 지식 센터입니다.',
   alternates: {
     canonical: '/guide',
   },
   openGraph: {
-    title: '배당 투자 실전 가이드 센터 (13대 심층 칼럼) - 배당패스',
+    title: '배당 투자 실전 가이드 센터 (16편 심층 칼럼) | 배당패스',
     description:
-      '가짜 고배당트랩을 피하고 평생 마르지 않는 현금흐름을 구축하는 13편의 배당 투자 심층 리서치 가이드를 무료로 제공합니다.',
+      '가짜 고배당트랩을 피하고 평생 마르지 않는 현금흐름을 구축하는 16편의 배당 투자 심층 에디토리얼 가이드를 무료로 제공합니다.',
     url: `${SITE_URL}/guide`,
     siteName: '배당패스 (Dividend Pass)',
   },
@@ -55,7 +55,7 @@ export default function GuideIndexPage() {
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-3xl">
             단순히 표면적인 배당수익률 숫자만 쫓다가는 원금 손실(배당 트랩)과 세금·건강보험료 폭탄을 맞기 쉽습니다.
-            배당패스 리서치팀이 한국·미국 증시 실측 데이터와 세법을 바탕으로 집필한{' '}
+            KRX·DART·SEC 공시 데이터와 현행 세법을 바탕으로 정리한{' '}
             <strong>{ALL_GUIDE_SUMMARIES.length}편의 핵심 투자 가이드</strong>를 통해 흔들리지 않는 현금흐름 파이프라인을 설계하세요.
           </p>
 
