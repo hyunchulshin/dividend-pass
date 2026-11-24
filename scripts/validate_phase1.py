@@ -17,7 +17,7 @@ DATA = os.path.join(BASE_DIR, 'public', 'data', 'dividend_stocks_500.json')
 REQUIRED = ['ticker', 'name', 'market', 'price', 'dpsTtm', 'dividendYield', 'dividendCycle',
             'marketCap', 'volume', 'popularityScore', 'isHighRisk', 'expenseRatio', 'topHoldings']
 NUMERIC = ['price', 'dpsTtm', 'dividendYield', 'marketCap', 'volume', 'popularityScore', 'expenseRatio']
-CYCLES = {'MONTHLY', 'QUARTERLY', 'ANNUAL'}
+CYCLES = {'MONTHLY', 'SEMI_ANNUAL', 'QUARTERLY', 'ANNUAL'}
 MCAP_MIN = {'KR': 100_000_000_000, 'US': 500_000_000}
 REP_MONTHLY_ETFS = {'446720', '458730', 'JEPI'}  # 기획서 명시 대표 월배당 ETF
 
