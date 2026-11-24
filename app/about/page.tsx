@@ -168,7 +168,7 @@ export default function AboutPage() {
                   <strong className="text-slate-800">2026-11-24:</strong> 전 페이지 USD/KRW 시뮬레이션 기준 환율을 1,400원으로 일원화하고, 1~12월 월별 예상 배당 분포 SVG 바 차트·10년 DRIP 복리 성장 차트·포트폴리오 자동 저장 기능을 적용했습니다.
                 </li>
                 <li>
-                  <strong className="text-slate-800">2026-11-18:</strong> 배당 투자·절세·건보료 심층 칼럼 14편을 최신 세법(ISA 비과세 한도 및 연 2,000만 원 금융소득종합과세) 기준으로 검증 업데이트했습니다.
+                  <strong className="text-slate-800">2026-11-18:</strong> 배당 투자·절세·건보료 심층 칼럼 16편을 최신 세법(ISA 비과세 한도 및 연 2,000만 원 금융소득종합과세) 기준으로 검증 업데이트했습니다.
                 </li>
                 <li>
                   <strong className="text-slate-800">2026-10-30:</strong> 국내 250종목·미국 250종목 시가총액·유동성 필터 및 고위험(TTM 20% 초과) 경고 플래그를 전면 점검했습니다.
