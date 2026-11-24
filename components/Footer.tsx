@@ -54,7 +54,17 @@ export default function Footer() {
           <div className="inline-flex items-center gap-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/snowmango-badge.png" alt="Snowmango Icon" className="h-4 w-4 rounded-xs shrink-0" />
-            <span className="font-semibold text-slate-700">A product by snowmango</span>
+            <span className="font-semibold text-slate-700">
+              A product by{' '}
+              <a
+                href="https://snowmango.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-blue-600 transition-colors"
+              >
+                snowmango
+              </a>
+            </span>
           </div>
           <span className="text-slate-300 hidden sm:inline">·</span>
           <span>© 2026 Dividend Pass. All rights reserved.</span>

@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     description: '배당 투자자의 최대 적인 세금과 건보료를 지키는 실전 절세 가이드! 배당패스에서 확인하세요.',
     url: `${SITE_URL}/guide/dividend-tax`,
     siteName: '배당패스 (Dividend Pass)',
+    images: ['/opengraph-image'],
   },
 };
 

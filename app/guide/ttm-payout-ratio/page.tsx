@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     description: '높은 배당수익률 뒤에 숨겨진 함정을 피하고 지속 가능한 알짜 배당주를 찾는 펀더멘털 분석 가이드.',
     url: `${SITE_URL}/guide/ttm-payout-ratio`,
     siteName: '배당패스 (Dividend Pass)',
+    images: ['/opengraph-image'],
   },
 };
 

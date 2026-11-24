@@ -124,7 +124,7 @@ export default function AboutPage() {
                 <span>안전 필터링 & 고위험 경고 플래그</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                유동성 결핍 종목을 방지하기 위해 <strong>국내 시총 1,000억 원 미만</strong> 및 <strong>미국 시총 $500M(약 6,700억 원) 미만</strong>은
+                유동성 결핍 종목을 방지하기 위해 <strong>국내 시총 1,000억 원 미만</strong> 및 <strong>미국 시총 $500M(약 7,000억 원) 미만</strong>은
                 데이터셋에서 사전 제외됩니다. 또한 연 환산 배당률이 20%를 초과하는 고레버리지·초고배당 상품은 원금 손실 위험 고지를 위해
                 <strong>[고위험]</strong> 뱃지를 자동 부착합니다.
               </p>

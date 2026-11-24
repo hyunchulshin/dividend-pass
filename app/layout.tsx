@@ -72,9 +72,37 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const siteJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: 'Snowmango',
+        url: 'https://snowmango.com',
+        email: 'contact@snowmango.com',
+        logo: `${SITE_URL}/snowmango-badge.png`,
+      },
+      {
+        '@type': 'WebSite',
+        name: '배당패스 (Dividend Pass)',
+        url: SITE_URL,
+        inLanguage: 'ko-KR',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Snowmango',
+          url: 'https://snowmango.com',
+        },
+      },
+    ],
+  };
+
   return (
     <html lang="ko" className="overflow-x-hidden max-w-full">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+        />
         <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}

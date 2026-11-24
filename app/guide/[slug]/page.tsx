@@ -59,11 +59,13 @@ export async function generateMetadata({ params }: GuideSlugPageProps): Promise<
       publishedTime: article.publishedAt,
       url: `${SITE_URL}/guide/${article.slug}`,
       siteName: '배당패스 (Dividend Pass)',
+      images: ['/opengraph-image'],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${article.title} | 배당패스`,
       description: article.description,
+      images: ['/opengraph-image'],
     },
   };
 }
