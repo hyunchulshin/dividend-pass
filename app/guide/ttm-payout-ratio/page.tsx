@@ -35,8 +35,36 @@ export const metadata: Metadata = {
 };
 
 export default function TtmPayoutRatioGuidePage() {
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'TTM 배당수익률과 배당성향(Payout Ratio) 제대로 읽는 법',
+    description:
+      '선행(Forward) 배당률의 착시와 TTM 실측 배당수익률, 당기순이익 대비 배당성향 및 FCF 기준 배당 여력 진단 기준 3가지를 해설합니다.',
+    datePublished: '2026-10-14',
+    dateModified: '2026-11-24',
+    author: {
+      '@type': 'Organization',
+      name: '배당패스 리서치 에디토리얼 (Snowmango)',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '배당패스 (Dividend Pass)',
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/guide/ttm-payout-ratio`,
+    },
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-white min-h-screen text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Header />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
@@ -168,6 +196,57 @@ export default function TtmPayoutRatioGuidePage() {
               </p>
             </div>
           </div>
+        </section>
+
+        {/* 3-2. 배당 지표 해석 & 리츠 FCF(AFFO) 예외 기준표 */}
+        <section className="space-y-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+            04. 업종별 배당성향(Payout Ratio) 적정 기준과 리츠·금융주 예외 체크
+          </h2>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            모든 기업에 동일하게 &quot;배당성향 60% 이하&quot; 기준을 적용하면 리츠(REITs)나 BDC, 인프라펀드를 오판하기 쉽습니다. 리츠는 대규모 부동산 감가상각비가 회계상 당기순이익을 깎아 먹기 때문에 <strong>영업현금흐름에서 자본적지출(CAPEX)을 제외한 FCF·AFFO 기준 배당성향</strong>을 함께 확인해야 정확한 안전성을 판별할 수 있습니다.
+          </p>
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-slate-100 text-slate-700">
+                <tr>
+                  <th className="px-4 py-3 font-bold">업종/자산군</th>
+                  <th className="px-4 py-3 font-bold">핵심 평가 지표</th>
+                  <th className="px-4 py-3 font-bold">안정 적정 구간</th>
+                  <th className="px-4 py-3 font-bold">주의/고위험 신호</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 bg-white text-slate-600">
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">일반 배당성장주 (제조·소비재)</td>
+                  <td className="px-4 py-3">순이익 배당성향 + FCF 여력</td>
+                  <td className="px-4 py-3 text-emerald-700 font-bold">35% ~ 60%</td>
+                  <td className="px-4 py-3 text-rose-600">85% 초과 또는 FCF 적자 전환</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">국내 금융지주 (105560 등)</td>
+                  <td className="px-4 py-3">보통주자본비율(CET1) + 총주주환원율</td>
+                  <td className="px-4 py-3 text-emerald-700 font-bold">CET1 13%+ · 환원율 35~50%</td>
+                  <td className="px-4 py-3 text-rose-600">대손충당금 급증 및 CET1 12% 하회</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">리츠 / 인프라 (O, 088980)</td>
+                  <td className="px-4 py-3">AFFO 배당성향 + 부채만기 구조</td>
+                  <td className="px-4 py-3 text-emerald-700 font-bold">AFFO 대비 70% ~ 85%</td>
+                  <td className="px-4 py-3 text-rose-600">AFFO 대비 95% 초과 + 유상증자 남발</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">신규 상장 ETF (1년 미만)</td>
+                  <td className="px-4 py-3">최근 분배금 연환산 (ANNUALIZED)</td>
+                  <td className="px-4 py-3 text-blue-700 font-bold">기초지수 목표 분배율 대조</td>
+                  <td className="px-4 py-3 text-rose-600">TTM 데이터 12개월 미확보 착시 주의</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            ⚠️ 상장 후 1년이 지나지 않은 신규 ETF는 12개월 실측 데이터가 쌓이지 않아 배당패스에서도 &apos;연환산(ANNUALIZED)&apos; 표기를 병행합니다. 실제 투자 전에는 금융감독원 DART 또는 미국 SEC 공시 원문에서 직전 결산 배당 결정 내역을 반드시 함께 대조하시기 바랍니다.
+          </p>
         </section>
 
         {/* 4. 배당패스의 안전 스크리닝 원칙 */}

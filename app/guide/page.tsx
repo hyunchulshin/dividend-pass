@@ -55,7 +55,7 @@ export default function GuideIndexPage() {
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-3xl">
             단순히 표면적인 배당수익률 숫자만 쫓다가는 원금 손실(배당 트랩)과 세금·건강보험료 폭탄을 맞기 쉽습니다.
-            KRX·DART·SEC 공시 데이터와 현행 세법을 바탕으로 정리한{' '}
+            공개 증권 시장의 배당 실측 데이터와 현행 세법을 바탕으로 정리한{' '}
             <strong>{ALL_GUIDE_SUMMARIES.length}편의 핵심 투자 가이드</strong>를 통해 흔들리지 않는 현금흐름 파이프라인을 설계하세요.
           </p>
 

@@ -34,6 +34,9 @@ interface StockPageProps {
   };
 }
 
+// 프리렌더링 목록 외 미등록 티커 접근 시 500 에러 대신 정상 404 반환
+export const dynamicParams = false;
+
 // 500개 종목 SSG 정적 파라미터 생성
 export async function generateStaticParams() {
   const stocks = await getDividendStocks();

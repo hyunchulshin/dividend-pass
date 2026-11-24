@@ -50,10 +50,6 @@ export const metadata: Metadata = {
     description:
       '국내 250개 + 미국 250개 총 500개 고배당주/ETF 실측치 및 파이어 배당 역산기',
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
   verification: {
     google: 'mXJRQUrNsyIWU9wFg_GKqfaaAK1arXoB5I1zDe9XNW8',
     other: {

@@ -21,15 +21,17 @@ export async function getDividendStocks(): Promise<DividendStock[]> {
     console.warn('Local file read failed, falling back to fetch', error);
   }
 
-  // 브라우저 또는 대체 방식
-  try {
-    const res = await fetch('/data/dividend_stocks_500.json');
-    if (res.ok) {
-      cachedStocks = await res.json();
-      return cachedStocks || [];
+  // 브라우저 환경에서만 상대경로 정적 JSON fetch 수행 (서버 사이드 크래시 원천 방지)
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/data/dividend_stocks_500.json');
+      if (res.ok) {
+        cachedStocks = await res.json();
+        return cachedStocks || [];
+      }
+    } catch (error) {
+      console.error('Failed to load dividend stocks data', error);
     }
-  } catch (error) {
-    console.error('Failed to load dividend stocks data', error);
   }
 
   return [];

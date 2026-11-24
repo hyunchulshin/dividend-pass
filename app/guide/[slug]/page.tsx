@@ -97,7 +97,7 @@ export default async function GuideArticleDetailPage({ params }: GuideSlugPagePr
     dateModified: article.publishedAt,
     author: {
       '@type': 'Organization',
-      name: 'KRX·DART·SEC 공시 기반 배당패스 에디토리얼',
+      name: '배당패스 리서치 에디토리얼 (Snowmango)',
       url: SITE_URL,
     },
     publisher: {

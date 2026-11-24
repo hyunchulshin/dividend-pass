@@ -1,5 +1,10 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: '페이지를 찾을 수 없습니다 | 배당패스',
+};
 
 export default function NotFound() {
   return (

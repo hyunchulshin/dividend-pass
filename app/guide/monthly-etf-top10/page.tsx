@@ -34,8 +34,36 @@ export const metadata: Metadata = {
 };
 
 export default function MonthlyEtfGuidePage() {
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: '2026 지금 가장 핫한 월배당 ETF 고르는 3가지 기준',
+    description:
+      '월배당 ETF의 커버드콜 NAV 잠식 위험, 실질 총비용부담률(TER), 시가총액 1,000억 원 이상 유동성 기준과 전략별 비교표를 정리합니다.',
+    datePublished: '2026-10-12',
+    dateModified: '2026-11-24',
+    author: {
+      '@type': 'Organization',
+      name: '배당패스 리서치 에디토리얼 (Snowmango)',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '배당패스 (Dividend Pass)',
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/guide/monthly-etf-top10`,
+    },
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-white min-h-screen text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Header />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
@@ -160,6 +188,62 @@ export default function MonthlyEtfGuidePage() {
               배당패스는 이러한 원칙에 따라 <strong>국내 시총 1,000억 원 미만, 미국 시총 $500M 미만</strong> 종목을 데이터 수집 단계부터 엄격하게 배제합니다.
             </p>
           </div>
+        </section>
+
+        {/* 기준 4: 월배당 ETF 유형별 수익·리스크 매트릭스 */}
+        <section className="space-y-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+            유형별 대표 월배당·분배금 ETF 구조 비교 (배당성장 vs 타깃 커버드콜)
+          </h2>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            월배당 ETF는 운용 메커니즘에 따라 장기 자본차익과 배당성장률이 크게 갈립니다. 1억 원 투자 시 연 분배금 규모만 보지 말고 총보수(TER)와 기초자산 추종률을 반드시 함께 확인해야 합니다.
+          </p>
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-slate-100 text-slate-700">
+                <tr>
+                  <th className="px-4 py-3 font-bold">전략 유형</th>
+                  <th className="px-4 py-3 font-bold">대표 참고 종목</th>
+                  <th className="px-4 py-3 font-bold">기대 분배율(연)</th>
+                  <th className="px-4 py-3 font-bold">총보수(참고)</th>
+                  <th className="px-4 py-3 font-bold">적합 투자 성향</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 bg-white text-slate-600">
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">배당성장형 (기초배당)</td>
+                  <td className="px-4 py-3 font-mono">458730 / SCHD(분기)</td>
+                  <td className="px-4 py-3 font-bold text-blue-600">3.4% ~ 3.8%</td>
+                  <td className="px-4 py-3">0.01% ~ 0.06%</td>
+                  <td className="px-4 py-3">장기 원금 성장 + 인플레이션 방어형</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">타깃·부분 커버드콜</td>
+                  <td className="px-4 py-3 font-mono">JEPI / JEPQ</td>
+                  <td className="px-4 py-3 font-bold text-emerald-700">7.0% ~ 10.5%</td>
+                  <td className="px-4 py-3">0.35% 내외</td>
+                  <td className="px-4 py-3">현금흐름 + 완만한 주가 방어 균형형</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">리츠·인프라 인컴</td>
+                  <td className="px-4 py-3 font-mono">O / MAIN / 088980(반기)</td>
+                  <td className="px-4 py-3 font-bold text-indigo-700">5.0% ~ 7.5%</td>
+                  <td className="px-4 py-3">개별 상장사/펀드</td>
+                  <td className="px-4 py-3">실물 임대료·통행료 기반 현금흐름형</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">초고배당 (연 20%+)</td>
+                  <td className="px-4 py-3">일일(0DTE)·단일종목 커버드콜</td>
+                  <td className="px-4 py-3 font-bold text-rose-600">20% 이상 (고위험)</td>
+                  <td className="px-4 py-3">0.70% ~ 1.15%</td>
+                  <td className="px-4 py-3">NAV 잠식·총수익률 하락 위험 높음</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            💡 월 현금흐름이 목표라면 배당성장형 ETF(458730·SCHD) 50% + 부분 커버드콜(JEPI·JEPQ) 30% + 리츠/인프라(O·088980) 20%처럼 혼합해 <strong>기준환율 1,400원</strong> 가정 시 원화·달러 노출과 원금 성장력을 동시에 관리하는 것이 안정적입니다.
+          </p>
         </section>
 
         {/* 실전 배당패스 활용 가이드 */}

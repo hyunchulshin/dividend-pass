@@ -78,13 +78,13 @@ export default function AboutPage() {
           </h2>
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3 leading-relaxed text-sm text-slate-600">
             <p>
-              배당패스는 공신력을 갖춘 <strong>네이버 금융 및 Yahoo Finance 실측 데이터 파이프라인</strong>을 구축하여 운영됩니다:
+              배당패스는 <strong>공개 증권 시장 시세·배당 데이터 일일 집계 및 자체 이상치 검증 파이프라인</strong>을 구축하여 운영됩니다:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-xs sm:text-sm pl-1">
-              <li><strong>국내 250개 종목:</strong> 삼성전자, 맥쿼리인프라, 금융지주 및 TIGER/KODEX/SOL/ACE 대표 배당 ETF</li>
-              <li><strong>미국 250개 종목:</strong> SCHD, JEPI, JEPQ, O, MAIN 및 배당귀족주(Dividend Aristocrats)</li>
-              <li><strong>일 1회 무인 자동 동기화:</strong> GitHub Actions 워크플로우를 통해 매일 새벽 최신 종가와 배당률 데이터를 무인 갱신</li>
-              <li><strong>무결성 게이트키핑:</strong> 자동 검증 스크립트(QA Gatekeeper)의 전 항목 통과 시에만 배포되는 엄격한 파이프라인 유지</li>
+              <li><strong>국내 250개 종목:</strong> KB금융(105560), 맥쿼리인프라(088980), 주요 금융지주 및 TIGER/KODEX/SOL/ACE 대표 배당 ETF</li>
+              <li><strong>미국 250개 종목:</strong> VOO, SCHD, JEPI, JEPQ, O, MAIN 및 배당귀족주(Dividend Aristocrats)</li>
+              <li><strong>일 1회 무인 자동 동기화:</strong> GitHub Actions 워크플로우를 통해 매일 공개 시세와 TTM 배당률 데이터를 자동 수집·갱신</li>
+              <li><strong>무결성 게이트키핑:</strong> 이상치·유동성 검증 스크립트(validate_phase1.py)의 전 항목 통과 시에만 배포되며, 주요 ETF 총보수와 상위 보유종목은 운용사 공시를 수시 대조 반영합니다.</li>
             </ul>
           </div>
         </section>
@@ -132,31 +132,31 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 3-2. KRX·DART·SEC 공식 데이터 교차검증 프로토콜 및 업데이트 이력 (Changelog) */}
+        {/* 3-2. 데이터 집계 검증 프로토콜 및 업데이트 이력 (Changelog) */}
         <section className="space-y-4">
           <div className="flex items-center gap-2 text-emerald-700 font-bold text-sm">
             <ShieldCheck size={18} />
-            <h2>공공·공시 데이터 검증 프로토콜 &amp; 업데이트 이력 (Changelog)</h2>
+            <h2>데이터 집계 검증 프로토콜 &amp; 업데이트 이력 (Changelog)</h2>
           </div>
 
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="p-4 rounded-xl bg-white border border-slate-200/70 space-y-1">
-                <span className="font-bold text-slate-900 block">1단계 · KRX · 자산운용사 공시</span>
+                <span className="font-bold text-slate-900 block">1단계 · 공개 시세·배당 일일 집계</span>
                 <p className="text-xs">
-                  국내 상장 종목(250개)의 기준가·시가총액·거래대금 및 ETF 분배금 지급 내역을 한국거래소(KRX) 및 운용사 공시 기준으로 수집합니다.
+                  국내 250종목·미국 250종목의 기준가·시가총액·거래대금 및 과거 12개월(TTM) 분배금 데이터를 자동 수집 파이프라인으로 일일 집계합니다.
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-white border border-slate-200/70 space-y-1">
-                <span className="font-bold text-slate-900 block">2단계 · 금융감독원 DART 전자공시</span>
+                <span className="font-bold text-slate-900 block">2단계 · 이상치 필터 · ETF 공시 보완</span>
                 <p className="text-xs">
-                  국내 배당주의 현금배당 결정 공시(배당기준일·주당배당금 DPS·결산월)를 DART 원문 공시와 대조해 TTM 누적액을 교차 검증합니다.
+                  자체 검증 스크립트(validate_phase1.py)로 결측치·시총 미달·배당률 급변 이상치를 차단하고, 대표 ETF 총보수(TER)·구성종목은 운용사 공시를 확인해 보완합니다.
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-white border border-slate-200/70 space-y-1">
-                <span className="font-bold text-slate-900 block">3단계 · 미국 SEC EDGAR · 기준환율 통일</span>
+                <span className="font-bold text-slate-900 block">3단계 · 기준환율 통일 · 원천 공시 권장</span>
                 <p className="text-xs">
-                  미국 배당주·ETF(250개)는 SEC EDGAR 공시 배당 내역 및 운용사 TTM 데이터를 반영하며, 전 서비스 시뮬레이터 환율을 1,400원/USD 단일 기준으로 일원화했습니다.
+                  전 서비스 시뮬레이터 환율을 1,400원/USD 단일 기준으로 일원화했으며, 최종 배당기준일과 확정 분배금은 금융감독원 DART·미국 SEC 공식 공시 확인을 권장합니다.
                 </p>
               </div>
             </div>

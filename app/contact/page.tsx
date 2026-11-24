@@ -94,7 +94,7 @@ export default function ContactPage() {
                 Q. 배당 데이터는 얼마나 자주 갱신되나요?
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                배당패스의 백엔드 파이프라인(GitHub Actions)은 매일 새벽 Yahoo Finance 등 공신력 있는 금융 시장 데이터를 통해 전자동 무인 갱신됩니다.
+                배당패스의 백엔드 파이프라인(GitHub Actions)은 매일 새벽 공개 증권 시장의 시세·배당 데이터를 일일 집계한 뒤 이상치·유동성 검증 스크립트(validate_phase1.py)를 거쳐 자동 갱신됩니다. 확정 배당기준일과 분배금 원문은 금융감독원 DART·미국 SEC 및 자산운용사 공식 공시를 함께 확인해 주세요.
               </p>
             </div>
 

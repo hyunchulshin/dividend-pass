@@ -35,8 +35,36 @@ export const metadata: Metadata = {
 };
 
 export default function DividendTaxGuidePage() {
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: '배당소득세 15.4%와 2,000만 원 금융소득종합과세 완벽 가이드',
+    description:
+      '국내 배당소득세 15.4%와 미국 배당세 15.0% 원천징수 원리, 2,000만 원 초과 시 금융소득종합과세 누진세율 및 건보료 상승 방지, ISA·연금 절세 계좌 비교를 해설합니다.',
+    datePublished: '2026-10-15',
+    dateModified: '2026-11-24',
+    author: {
+      '@type': 'Organization',
+      name: '배당패스 리서치 에디토리얼 (Snowmango)',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '배당패스 (Dividend Pass)',
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/guide/dividend-tax`,
+    },
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-white min-h-screen text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Header />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
@@ -172,6 +200,65 @@ export default function DividendTaxGuidePage() {
                 연금저축과 합산하여 연 최대 900만 원까지 세액공제를 받으면서, 월배당 ETF를 담아 은퇴 파이프라인을 구축할 수 있습니다.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* 3-2. 계좌별 세후 실수령액 비교표 & 외국납부세액공제 */}
+        <section className="space-y-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+            04. 계좌 유형별 연 1,000만 원 배당 시 세후 실수령액 비교
+          </h2>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            동일한 연 6% 배당 포트폴리오(투자금 약 1억 6,700만 원, 세전 배당금 연 1,000만 원)를 어느 계좌에서 운용하느냐에 따라 연간 세후 현금흐름과 10년 복리 재투자 속도가 크게 달라집니다. 특히 2025년 이후 절세계좌 내 해외주식 ETF 분배금에 대한 외국납부세액 선징수(15%) 후 환급 구조 변경까지 감안해, 국내 고배당주·인프라펀드(105560, 088980)와 미국 배당 ETF(SCHD, JEPI)의 계좌 배치를 분리하는 전략이 중요합니다.
+          </p>
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-slate-100 text-slate-700">
+                <tr>
+                  <th className="px-4 py-3 font-bold">계좌 유형</th>
+                  <th className="px-4 py-3 font-bold">원천징수 세율</th>
+                  <th className="px-4 py-3 font-bold">종합과세 합산</th>
+                  <th className="px-4 py-3 font-bold">세전 1,000만 원 시 실수령액</th>
+                  <th className="px-4 py-3 font-bold">최적 편입 자산</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 bg-white text-slate-600">
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">일반 위탁계좌 (국내)</td>
+                  <td className="px-4 py-3">15.4%</td>
+                  <td className="px-4 py-3 text-amber-700 font-semibold">연 2,000만 초과 시 합산</td>
+                  <td className="px-4 py-3 font-bold">846만 원</td>
+                  <td className="px-4 py-3">금융소득 2,000만 미만 국내 배당주</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-slate-900">일반 위탁계좌 (미국 직투)</td>
+                  <td className="px-4 py-3">15.0% (USD 환산)</td>
+                  <td className="px-4 py-3 text-amber-700 font-semibold">연 2,000만 초과 시 합산</td>
+                  <td className="px-4 py-3 font-bold">850만 원</td>
+                  <td className="px-4 py-3">SCHD·JEPI 등 미국 직투 ETF</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-blue-700">중개형 ISA (일반형)</td>
+                  <td className="px-4 py-3">200만 비과세 + 초과 9.9%</td>
+                  <td className="px-4 py-3 text-emerald-700 font-bold">전액 합산 제외 (분리과세)</td>
+                  <td className="px-4 py-3 font-bold text-blue-700">920만 8천 원</td>
+                  <td className="px-4 py-3">국내 상장 고배당주·리츠·월배당 ETF</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-bold text-emerald-700">연금저축 / IRP (수령기)</td>
+                  <td className="px-4 py-3">과세이연 후 3.3%~5.5%</td>
+                  <td className="px-4 py-3 text-emerald-700 font-bold">연 1,500만 이하 분리과세</td>
+                  <td className="px-4 py-3 font-bold text-emerald-700">945만~967만 원 (재투자시 과세이연)</td>
+                  <td className="px-4 py-3">국내 상장 배당성장 ETF</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 leading-relaxed space-y-1.5">
+            <strong className="text-slate-900 block">📌 실전 절세 3원칙 요약</strong>
+            <p>1) 국내 고배당 개별주(KB금융 등)와 맥쿼리인프라는 ISA 계좌에 최우선 배치해 15.4% → 비과세/9.9% 분리과세로 낮춥니다.</p>
+            <p>2) 금융소득종합과세(연 2,000만 원) 임계치에 가까워지면 배우자 증여세 공제(10년 6억 원)를 활용해 부부 각자 연 2,000만 원씩 합산 4,000만 원까지 분리과세 구간을 분리합니다.</p>
+            <p>3) 미국 직투 주식의 매매차익(연 250만 원 공제 후 22% 양도소득세)은 금융소득종합과세 합산 대상이 아니므로, 분배율이 낮은 VOO 등 성장형 ETF는 일반계좌 장기 보유가 유리할 수 있습니다.</p>
           </div>
         </section>
 
