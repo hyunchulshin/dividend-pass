@@ -89,11 +89,13 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
       type: 'article',
       url: `${SITE_URL}/stock/${stock.ticker}`,
       siteName: '배당패스 (Dividend Pass)',
+      images: ['/opengraph-image'],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: ['/opengraph-image'],
     },
   };
 }

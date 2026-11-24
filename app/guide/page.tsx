@@ -28,6 +28,14 @@ export const metadata: Metadata = {
       '가짜 고배당트랩을 피하고 평생 마르지 않는 현금흐름을 구축하는 16편의 배당 투자 심층 에디토리얼 가이드를 무료로 제공합니다.',
     url: `${SITE_URL}/guide`,
     siteName: '배당패스 (Dividend Pass)',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '배당 투자 실전 가이드 센터 (16편 심층 칼럼) | 배당패스',
+    description:
+      '가짜 고배당트랩을 피하고 평생 마르지 않는 현금흐름을 구축하는 16편의 배당 투자 심층 에디토리얼 가이드를 무료로 제공합니다.',
+    images: ['/opengraph-image'],
   },
 };
 

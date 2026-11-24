@@ -40,14 +40,18 @@ KNOWN_MONTHLY_KR_KEYWORDS = [
     'KODEX 미국배당프리미엄액티브', 'KBSTAR 미국배당다우존스', '타겟위클리'
 ]
 
+KNOWN_MONTHLY_KR_TICKERS = {
+    '329200', '476800'
+}
+
 KNOWN_QUARTERLY_KR_TICKERS = {
     '005930', '005935', '005380', '005385', '005387', '000270', '105560',
     '055550', '086790', '316140', '017670', '005490', '034730', '032830',
-    '030200', '032640', '012330', '018880', '097950'
+    '030200', '032640', '012330', '018880', '097950', '395400'
 }
 
 KNOWN_SEMI_ANNUAL_KR_TICKERS = {
-    '088980'
+    '088980', '330590', '293940', '451800', '365550', '415640', '033780'
 }
 
 TOP_HOLDINGS_DICT = {
@@ -96,18 +100,19 @@ def get_dividend_cycle(ticker, name, market, is_etf):
             return 'MONTHLY'
         return 'QUARTERLY'
     else:
+        if ticker in KNOWN_MONTHLY_KR_TICKERS:
+            return 'MONTHLY'
+        if ticker in KNOWN_SEMI_ANNUAL_KR_TICKERS:
+            return 'SEMI_ANNUAL'
+        if ticker in KNOWN_QUARTERLY_KR_TICKERS:
+            return 'QUARTERLY'
         if is_etf:
             if any(k in name for k in KNOWN_MONTHLY_KR_KEYWORDS):
                 return 'MONTHLY'
             if '200' in name or 'S&P500' in name or '나스닥' in name or '배당' in name:
                 return 'QUARTERLY'
             return 'ANNUAL'
-        else:
-            if ticker in KNOWN_SEMI_ANNUAL_KR_TICKERS:
-                return 'SEMI_ANNUAL'
-            if ticker in KNOWN_QUARTERLY_KR_TICKERS:
-                return 'QUARTERLY'
-            return 'ANNUAL'
+        return 'ANNUAL'
 
 
 # -------------------------------------------------------------

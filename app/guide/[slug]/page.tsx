@@ -31,6 +31,8 @@ interface GuideSlugPageProps {
   };
 }
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return DYNAMIC_GUIDE_ARTICLES.map((article) => ({
     slug: article.slug,
