@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { DividendStock } from '@/types/stock';
+import { DEFAULT_USD_KRW_RATE } from '@/lib/stockAnalysis';
 import { Calculator, ArrowRight, Sparkles, Coins, DollarSign, CheckCircle2 } from 'lucide-react';
 
 interface StockMiniCalculatorProps {
@@ -19,7 +20,7 @@ const PRESET_AMOUNTS = [
 
 export default function StockMiniCalculator({ stock }: StockMiniCalculatorProps) {
   const [monthlyTarget, setMonthlyTarget] = useState<number>(500_000); // 기본 월 50만 원
-  const [exchangeRate] = useState<number>(1350); // 기본 기준환율
+  const [exchangeRate] = useState<number>(DEFAULT_USD_KRW_RATE); // 기본 기준환율 1,400원
 
   const isKr = stock.market === 'KR';
   const taxRate = isKr ? 0.154 : 0.150; // 국내 15.4%, 미국 15.0%

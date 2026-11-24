@@ -132,6 +132,52 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* 3-2. KRX·DART·SEC 공식 데이터 교차검증 프로토콜 및 업데이트 이력 (Changelog) */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+            <ShieldCheck size={18} />
+            <h2>공공·공시 데이터 검증 프로토콜 &amp; 업데이트 이력 (Changelog)</h2>
+          </div>
+
+          <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                <span className="font-bold text-slate-900 block">1단계 · KRX · 자산운용사 공시</span>
+                <p className="text-xs">
+                  국내 상장 종목(250개)의 기준가·시가총액·거래대금 및 ETF 분배금 지급 내역을 한국거래소(KRX) 및 운용사 공시 기준으로 수집합니다.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                <span className="font-bold text-slate-900 block">2단계 · 금융감독원 DART 전자공시</span>
+                <p className="text-xs">
+                  국내 배당주의 현금배당 결정 공시(배당기준일·주당배당금 DPS·결산월)를 DART 원문 공시와 대조해 TTM 누적액을 교차 검증합니다.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                <span className="font-bold text-slate-900 block">3단계 · 미국 SEC EDGAR · 기준환율 통일</span>
+                <p className="text-xs">
+                  미국 배당주·ETF(250개)는 SEC EDGAR 공시 배당 내역 및 운용사 TTM 데이터를 반영하며, 전 서비스 시뮬레이터 환율을 1,400원/USD 단일 기준으로 일원화했습니다.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-200/80 space-y-2">
+              <h3 className="font-bold text-slate-900 text-xs sm:text-sm">최근 데이터·모델 업데이트 이력</h3>
+              <ul className="space-y-1.5 text-xs text-slate-600">
+                <li>
+                  <strong className="text-slate-800">2026-11-24:</strong> 전 페이지 USD/KRW 시뮬레이션 기준 환율을 1,400원으로 일원화하고, 1~12월 월별 예상 배당 분포 SVG 바 차트·10년 DRIP 복리 성장 차트·포트폴리오 자동 저장 기능을 적용했습니다.
+                </li>
+                <li>
+                  <strong className="text-slate-800">2026-11-18:</strong> 배당 투자·절세·건보료 심층 칼럼 14편을 최신 세법(ISA 비과세 한도 및 연 2,000만 원 금융소득종합과세) 기준으로 검증 업데이트했습니다.
+                </li>
+                <li>
+                  <strong className="text-slate-800">2026-10-30:</strong> 국내 250종목·미국 250종목 시가총액·유동성 필터 및 고위험(TTM 20% 초과) 경고 플래그를 전면 점검했습니다.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* 4. 운영팀 안내 */}
         <section className="p-5 rounded-2xl bg-slate-50 border border-slate-200/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm text-slate-600">
           <div className="flex items-center flex-wrap gap-2">

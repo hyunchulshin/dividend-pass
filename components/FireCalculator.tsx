@@ -22,8 +22,8 @@ import {
   Sliders,
 } from 'lucide-react';
 import InfoTooltip from '@/components/InfoTooltip';
+import { DEFAULT_USD_KRW_RATE } from '@/lib/stockAnalysis';
 
-const DEFAULT_EXCHANGE_RATE = 1350; // 기준 환율 1,350원
 const KR_TAX_RATE = 0.154; // 국내 배당소득세 15.4%
 const US_TAX_RATE = 0.150; // 미국 배당소득세 15.0%
 
@@ -44,8 +44,8 @@ export default function FireCalculator({
 }: FireCalculatorProps) {
   // 목표 월 배당금 (기본 100만 원)
   const [targetMonthly, setTargetMonthly] = useState<number>(1_000_000);
-  // 환율 설정 상태 (기본 1,350원)
-  const [exchangeRate, setExchangeRate] = useState<number>(DEFAULT_EXCHANGE_RATE);
+  // 환율 설정 상태 (공통 기준 환율 1,400원)
+  const [exchangeRate, setExchangeRate] = useState<number>(DEFAULT_USD_KRW_RATE);
   const [isEditingExchange, setIsEditingExchange] = useState<boolean>(false);
 
   // 포트폴리오 내 미국 종목 포함 여부
@@ -251,7 +251,7 @@ export default function FireCalculator({
                 적용 환율:
               </span>
               <div className="flex items-center gap-1">
-                {[1300, 1350, 1400].map((rate) => (
+                {[DEFAULT_USD_KRW_RATE - 100, DEFAULT_USD_KRW_RATE - 50, DEFAULT_USD_KRW_RATE, DEFAULT_USD_KRW_RATE + 50].map((rate) => (
                   <button
                     key={rate}
                     type="button"

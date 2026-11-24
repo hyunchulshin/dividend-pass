@@ -18,9 +18,9 @@ export default function Header() {
           </div>
           <div>
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 leading-none group-hover:text-blue-600 transition-colors">
+              <span className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 leading-none group-hover:text-blue-600 transition-colors">
                 배당패스
-              </h1>
+              </span>
               <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60 leading-none">
                 500
               </span>

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { HelpCircle, X } from 'lucide-react';
 import { TooltipType } from '@/types/stock';
+import { DEFAULT_USD_KRW_RATE } from '@/lib/stockAnalysis';
 
 interface TooltipContent {
   title: string;
@@ -44,7 +45,7 @@ const TOOLTIP_DATA: Record<TooltipType, TooltipContent> = {
   fire: {
     title: '파이어(FIRE) 배당 역산',
     description: '원하는 월 배당 실수령액을 얻기 위해 각 종목별로 매수해야 하는 최소 주식 수와 필요 자본을 수학적으로 역산합니다.',
-    detail: '미국 종목은 환율 1,350원 기준 원화 환산 및 15.0% 세율이 정밀 적용됩니다.',
+    detail: `미국 종목은 환율 ${DEFAULT_USD_KRW_RATE.toLocaleString()}원 기준 원화 환산 및 15.0% 세율이 정밀 적용됩니다.`,
   },
 };
 

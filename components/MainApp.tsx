@@ -11,6 +11,7 @@ import EtfModal from '@/components/EtfModal';
 import FireCalculator from '@/components/FireCalculator';
 import InfoTooltip from '@/components/InfoTooltip';
 import AdSenseSlot from '@/components/AdSenseSlot';
+import PortfolioVisualCharts from '@/components/PortfolioVisualCharts';
 import { ALL_GUIDE_SUMMARIES } from '@/lib/guideArticles';
 import {
   Sparkles,
@@ -27,9 +28,20 @@ import {
   Clock,
 } from 'lucide-react';
 
+interface MarketStats {
+  totalCount: number;
+  krCount: number;
+  usCount: number;
+  monthlyCount: number;
+}
+
 interface MainAppProps {
   initialStocks: DividendStock[];
+  marketStats?: MarketStats;
 }
+
+const PORTFOLIO_STORAGE_KEY = 'dividend_pass_portfolio_v1';
+const DEFAULT_PORTFOLIO_TICKERS = ['458730', 'JEPI', 'SCHD', '088980']; // TIGER 배당다우존스, JEPI, SCHD, 맥쿼리인프라
 
 const HOME_FAQS = [
   {
@@ -50,14 +62,17 @@ const HOME_FAQS = [
   },
 ];
 
-export default function MainApp({ initialStocks }: MainAppProps) {
+export default function MainApp({ initialStocks, marketStats }: MainAppProps) {
   // 메인 네비게이션 탭 (탐색 vs 파이어 역산기)
   const [navTab, setNavTab] = useState<'explorer' | 'calculator'>('explorer');
 
+  // 전체 500종목 데이터셋 상태 (SSR 초기 48종목 + 마운트 후 전체 JSON 하이드레이션)
+  const [stocks, setStocks] = useState<DividendStock[]>(initialStocks);
+  const [savedLoaded, setSavedLoaded] = useState<boolean>(false);
+
   // 포트폴리오 상태 (기본적으로 대표 종목 4개 사전 탑재)
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>(() => {
-    const defaultTickers = ['458730', 'JEPI', 'SCHD', '088980']; // TIGER 배당다우존스, JEPI, SCHD, 맥쿼리인프라
-    const matched = initialStocks.filter((s) => defaultTickers.includes(s.ticker));
+    const matched = initialStocks.filter((s) => DEFAULT_PORTFOLIO_TICKERS.includes(s.ticker));
     const equalWeight = matched.length > 0 ? 100 / matched.length : 100;
     return matched.map((stock) => ({
       stock,
@@ -69,26 +84,103 @@ export default function MainApp({ initialStocks }: MainAppProps) {
   const [selectedStock, setSelectedStock] = useState<DividendStock | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // URL 쿼리 파라미터(?select=TICKER) 처리
+  // 전체 500종목 JSON 클라이언트 하이드레이션 + localStorage 포트폴리오 복원 + URL ?select= 처리
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    const selectTicker = params.get('select');
-    if (selectTicker) {
-      const target = initialStocks.find((s) => s.ticker.toLowerCase() === selectTicker.toLowerCase());
-      if (target) {
-        setPortfolio((prev) => {
-          if (prev.some((p) => p.stock.ticker === target.ticker)) return prev;
-          const newLen = prev.length + 1;
-          const equalWeight = 100 / newLen;
-          return [...prev.map((p) => ({ ...p, weight: equalWeight })), { stock: target, weight: equalWeight }];
-        });
-        if (window.location.hash.includes('fire-simulator')) {
-          setNavTab('calculator');
+    let active = true;
+
+    const applySavedAndQuery = (availableStocks: DividendStock[]) => {
+      let nextPortfolio: PortfolioItem[] | null = null;
+      try {
+        const raw = window.localStorage.getItem(PORTFOLIO_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as { ticker: string; weight: number }[];
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const restored = parsed
+              .map((entry) => {
+                const found = availableStocks.find((s) => s.ticker === entry.ticker);
+                return found ? { stock: found, weight: Number(entry.weight) || 0 } : null;
+              })
+              .filter((item): item is PortfolioItem => item !== null);
+            if (restored.length > 0) {
+              nextPortfolio = restored;
+              setSavedLoaded(true);
+            }
+          }
+        }
+      } catch {
+        // localStorage 파싱 실패 시 기본 포트폴리오 유지
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const selectTicker = params.get('select');
+      if (selectTicker) {
+        const target = availableStocks.find((s) => s.ticker.toLowerCase() === selectTicker.toLowerCase());
+        if (target) {
+          setPortfolio((prev) => {
+            const base = nextPortfolio ?? prev;
+            if (base.some((p) => p.stock.ticker === target.ticker)) return base;
+            const newLen = base.length + 1;
+            const equalWeight = 100 / newLen;
+            return [...base.map((p) => ({ ...p, weight: equalWeight })), { stock: target, weight: equalWeight }];
+          });
+          if (window.location.hash.includes('fire-simulator')) {
+            setNavTab('calculator');
+          }
+          return;
         }
       }
-    }
+
+      if (nextPortfolio) {
+        setPortfolio(nextPortfolio);
+      }
+    };
+
+    applySavedAndQuery(initialStocks);
+
+    fetch('/data/dividend_stocks_500.json')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((fullData: DividendStock[] | null) => {
+        if (!active || !Array.isArray(fullData) || fullData.length === 0) return;
+        setStocks(fullData);
+        applySavedAndQuery(fullData);
+      })
+      .catch(() => {
+        // 네트워크 실패 시 SSR 초기 종목 유지
+      });
+
+    return () => {
+      active = false;
+    };
   }, [initialStocks]);
+
+  // 포트폴리오 변경 시 localStorage 자동 저장
+  useEffect(() => {
+    if (typeof window === 'undefined' || portfolio.length === 0) return;
+    try {
+      const compact = portfolio.map((item) => ({
+        ticker: item.stock.ticker,
+        weight: item.weight,
+      }));
+      window.localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(compact));
+    } catch {
+      // 스토리지 용량 제한 등 무시
+    }
+  }, [portfolio]);
+
+  const handleResetPortfolio = () => {
+    const matched = stocks.filter((s) => DEFAULT_PORTFOLIO_TICKERS.includes(s.ticker));
+    const equalWeight = matched.length > 0 ? 100 / matched.length : 100;
+    setPortfolio(matched.map((stock) => ({ stock, weight: equalWeight })));
+    setSavedLoaded(false);
+    if (typeof window !== 'undefined') {
+      try {
+        window.localStorage.removeItem(PORTFOLIO_STORAGE_KEY);
+      } catch {
+        // ignore
+      }
+    }
+  };
 
   // 포트폴리오 티커 Set
   const portfolioTickers = new Set(portfolio.map((p) => p.stock.ticker));
@@ -117,9 +209,11 @@ export default function MainApp({ initialStocks }: MainAppProps) {
     setIsModalOpen(false);
   };
 
-  const krCount = initialStocks.filter((s) => s.market === 'KR').length;
-  const usCount = initialStocks.filter((s) => s.market === 'US').length;
-  const monthlyCount = initialStocks.filter((s) => s.assetType === 'ETF' && s.dividendCycle === 'MONTHLY').length;
+  const totalCount = marketStats?.totalCount ?? stocks.length;
+  const krCount = marketStats?.krCount ?? stocks.filter((s) => s.market === 'KR').length;
+  const usCount = marketStats?.usCount ?? stocks.filter((s) => s.market === 'US').length;
+  const monthlyCount =
+    marketStats?.monthlyCount ?? stocks.filter((s) => s.assetType === 'ETF' && s.dividendCycle === 'MONTHLY').length;
 
   const featuredGuides = ALL_GUIDE_SUMMARIES.slice(0, 6);
 
@@ -135,7 +229,7 @@ export default function MainApp({ initialStocks }: MainAppProps) {
           <div className="inline-flex items-center gap-1.5 flex-wrap justify-center">
             <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-200/60 shadow-xs">
               <Sparkles size={11} className="text-blue-600" />
-              <span>검증 고배당 500 종목</span>
+              <span>검증 고배당 {totalCount} 종목</span>
             </div>
             <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200/60 shadow-xs">
               <ShieldCheck size={11} className="stroke-[2.5]" />
@@ -146,10 +240,10 @@ export default function MainApp({ initialStocks }: MainAppProps) {
             </div>
           </div>
 
-          <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
             매달 들어오는 배당금,{' '}
             <span className="text-blue-600 underline decoration-blue-200 underline-offset-4">배당패스</span>로 투명하게
-          </h2>
+          </h1>
 
           {/* 청약패스식 미니멀 1줄 인라인 투명성 배너 (Above the Fold 최적화) */}
           <div className="bg-blue-50/70 border border-blue-200/60 p-2 sm:p-2.5 rounded-xl flex items-center justify-center gap-3 sm:gap-6 text-[11px] text-slate-600 flex-wrap">
@@ -211,10 +305,31 @@ export default function MainApp({ initialStocks }: MainAppProps) {
           </div>
         </section>
 
+        {/* 포트폴리오 저장 상태 & 1~12월 배당/10년 DRIP SVG 시각화 차트 */}
+        <section className="space-y-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-semibold">
+                {savedLoaded
+                  ? `💾 저장된 내 배당 포트폴리오(${portfolio.length}종목) 복원됨`
+                  : `💾 내 배당 포트폴리오(${portfolio.length}종목) 브라우저 자동 저장 중`}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleResetPortfolio}
+              className="font-semibold text-blue-600 hover:underline cursor-pointer"
+            >
+              기본 4종목 포트폴리오 초기화
+            </button>
+          </div>
+          <PortfolioVisualCharts portfolio={portfolio} />
+        </section>
+
         {/* 탭 콘텐츠 렌더링 */}
         {navTab === 'explorer' ? (
           <StockExplorer
-            stocks={initialStocks}
+            stocks={stocks}
             portfolioTickers={portfolioTickers}
             onSelectStock={handleOpenModal}
             onTogglePortfolio={handleTogglePortfolio}
@@ -222,7 +337,7 @@ export default function MainApp({ initialStocks }: MainAppProps) {
         ) : (
           <FireCalculator
             portfolio={portfolio}
-            allStocks={initialStocks}
+            allStocks={stocks}
             onRemoveFromPortfolio={handleRemoveFromPortfolio}
             onSetPortfolio={setPortfolio}
             onSelectStock={handleOpenModal}
