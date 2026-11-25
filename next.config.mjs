@@ -7,7 +7,6 @@ const securityHeaders = [
 
 const nextConfig = {
   reactStrictMode: true,
-  outputFileTracing: false,
   poweredByHeader: false,
   async headers() {
     return [

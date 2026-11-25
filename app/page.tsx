@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const DEFAULT_PORTFOLIO_TICKERS = new Set(['458730', 'JEPI', 'SCHD', '088980']);
 
