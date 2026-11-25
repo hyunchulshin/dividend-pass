@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import StockMiniCalculator from '@/components/StockMiniCalculator';
 import AdSenseSlot from '@/components/AdSenseSlot';
-import { getDividendStocks, getStockByTicker, getRelatedStocks } from '@/lib/data';
+import { getDividendStocks, getStockByTicker, getRelatedStocks, getDatasetUpdatedDate } from '@/lib/data';
 import { generateStockDeepAnalysis, formatWonHuman } from '@/lib/stockAnalysis';
 import { SITE_URL } from '@/lib/site';
 import {
@@ -103,6 +103,7 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
 export default async function StockDetailPage({ params }: StockPageProps) {
   const allStocks = await getDividendStocks();
   const stock = await getStockByTicker(params.ticker);
+  const dataUpdatedAt = getDatasetUpdatedDate();
 
   if (!stock) {
     notFound();
@@ -223,10 +224,15 @@ export default async function StockDetailPage({ params }: StockPageProps) {
               )}
             </div>
 
-            {/* 인기 점수 */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50/80 text-blue-700 text-xs font-bold border border-blue-200/60">
-              <Flame size={13} className="text-blue-600" />
-              <span>인기 점수 {stock.popularityScore.toFixed(1)}점</span>
+            {/* 인기 점수 + 데이터 기준일 */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-semibold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-200/80">
+                데이터 기준일: {dataUpdatedAt}
+              </span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50/80 text-blue-700 text-xs font-bold border border-blue-200/60">
+                <Flame size={13} className="text-blue-600" />
+                <span>인기 점수 {stock.popularityScore.toFixed(1)}점</span>
+              </div>
             </div>
           </div>
 

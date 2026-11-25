@@ -38,6 +38,7 @@ interface MarketStats {
 interface MainAppProps {
   initialStocks: DividendStock[];
   marketStats?: MarketStats;
+  dataUpdatedAt?: string;
 }
 
 const PORTFOLIO_STORAGE_KEY = 'dividend_pass_portfolio_v1';
@@ -62,7 +63,7 @@ const HOME_FAQS = [
   },
 ];
 
-export default function MainApp({ initialStocks, marketStats }: MainAppProps) {
+export default function MainApp({ initialStocks, marketStats, dataUpdatedAt = '2026-11-24' }: MainAppProps) {
   // 메인 네비게이션 탭 (탐색 vs 파이어 역산기)
   const [navTab, setNavTab] = useState<'explorer' | 'calculator'>('explorer');
 
@@ -237,6 +238,9 @@ export default function MainApp({ initialStocks, marketStats }: MainAppProps) {
             </div>
             <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold border border-slate-200/60 shadow-xs">
               <span>국내 {krCount} · 미국 {usCount} · 월배당 {monthlyCount}</span>
+            </div>
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-50 text-slate-500 text-[11px] font-semibold border border-slate-200/70">
+              <span>데이터 기준일: {dataUpdatedAt}</span>
             </div>
           </div>
 

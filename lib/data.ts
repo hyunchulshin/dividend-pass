@@ -37,6 +37,27 @@ export async function getDividendStocks(): Promise<DividendStock[]> {
   return [];
 }
 
+/**
+ * public/data/dividend_stocks_500.json 실제 파일 수정일(KST YYYY-MM-DD) 반환
+ */
+export function getDatasetUpdatedDate(): string {
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'data', 'dividend_stocks_500.json');
+    if (fs.existsSync(filePath)) {
+      const stat = fs.statSync(filePath);
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Seoul',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(stat.mtime);
+    }
+  } catch {
+    // fallback below
+  }
+  return '2026-11-24';
+}
+
 export async function getStockByTicker(ticker: string): Promise<DividendStock | undefined> {
   const stocks = await getDividendStocks();
   return stocks.find((s) => s.ticker.toLowerCase() === ticker.toLowerCase());

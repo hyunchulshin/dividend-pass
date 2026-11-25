@@ -1,5 +1,12 @@
-import { getDividendStocks } from '@/lib/data';
+import type { Metadata } from 'next';
+import { getDividendStocks, getDatasetUpdatedDate } from '@/lib/data';
 import MainApp from '@/components/MainApp';
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export const revalidate = 3600;
 
@@ -7,6 +14,7 @@ const DEFAULT_PORTFOLIO_TICKERS = new Set(['458730', 'JEPI', 'SCHD', '088980']);
 
 export default async function Home() {
   const allStocks = await getDividendStocks();
+  const dataUpdatedAt = getDatasetUpdatedDate();
 
   const marketStats = {
     totalCount: allStocks.length,
@@ -31,5 +39,5 @@ export default async function Home() {
     }
   }
 
-  return <MainApp initialStocks={Array.from(picked.values())} marketStats={marketStats} />;
+  return <MainApp initialStocks={Array.from(picked.values())} marketStats={marketStats} dataUpdatedAt={dataUpdatedAt} />;
 }
